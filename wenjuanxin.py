@@ -1,8 +1,13 @@
 from fake_useragent.fake import UserAgent
 import requests
+import random
 from faker import Factory
 import time
+import math
+import re
+from bs4 import BeautifulSoup
 from urllib.parse import urlencode
+
 headers = {
     # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0',
     'Accept': 'text/plain, */*; q=0.01',
@@ -16,13 +21,92 @@ headers = {
     'Content-Type': 'text/plain'
 }
 
-def random():
+def current_time(a):
+    '''
+    a:秒数
+    返回当前时间
+    :return:
+    '''
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()-a))
+
+
+def random_num(min, max):
+    '''
+    范围随机数
+    :param min:
+    :param max:
+    :return:
+    '''
+    return random.randrange(min, max)
+
+
+def random_parameter():
+    str='curid=69156112'
+    '''
+    随机请求参数
+    :return:
+        curid: 69156112
+        starttime: 2020/4/3 20:15:01
+        source: directphone
+        submittype: 1
+        ktimes: 150
+        hlv: 1
+        rn: 2027509235.12717626 2027509235.09093637 2027509235.80409534
+        jpm: 17
+        t: 1585916212527
+        jqnonce: 61a28b7e-460b-4762-8b49-783d09ec1e09
+        jqsign: 70`39c6d,571c,5673,9c58,692e18db0d18
+    '''
+    starttime=current_time(random_num(10,50))
+    now_time=time.time()
+    t=int(now_time*1000)
+    source='directphone'
+    submittype=1
+    ktimes=random_num(200,575)
+    hlv=1
+    rn='2027509235.{}'.format(int(math.modf(now_time)[0]*10000000))
+    jpm=17
+
+
     return
+
+
+def dataenc(ktimes):
+
+
+    return
+
+
+
+def random_url():
+    '''
+    随机请求url
+    :return:
+    '''
+    return
+
+
 ua = UserAgent()
 
 if __name__ == '__main__':
-    url = "https://www.wjx.cn/m/69156112.aspx"
+    res=requests.get("https://www.wjx.cn/m/69156112.aspx",headers=headers)
 
+    soup=BeautifulSoup(res.text, 'html.parser')
+    # print(res.text)
+    print(re.search("rndnum=\".+\";", res.text).group(0)[8:-2])
+    # print(re.search("rndnum=.*'", res))
+    url = "https://www.wjx.cn/joinnew/processjq.ashx?"
+    # print(current_time(0))
+    # print(current_time(3000))
+    a=123.456
+
+    time_str=time.time()
+    b = math.modf(time_str)[0]
+    print(int(b*10000000))
+    # print(time.time())
+    print(int(time.time()*1000))
+    # print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
+    # print(random_num(150, 350))
     print()
     # zh_CN 表示中国大陆版
     fake = Factory().create('zh_CN')
@@ -31,8 +115,6 @@ if __name__ == '__main__':
     print(fake.province())
     # 随机产生城市
     print(fake.city())
-
-
 
     # # 产生随机手机号
     # print(fake.phone_number())
