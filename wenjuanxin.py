@@ -17,10 +17,12 @@ headers = {
     'Origin': 'https://www.wjx.cn',
     'Connection': 'keep-alive',
     'Referer': 'https://www.wjx.cn/m/69156112.aspx',
-    'Cookie': 'acw_tc=2f624a4c15859126853877402e62d4a0ffe71fe04433f4f22a1f6fc25631a9; .ASPXANONYMOUS=ZNpKYjtA1gEkAAAAMjIyMzdhMWEtOWI4ZS00ZjZhLTllM2YtNDk2NTQxM2RiNGY2RrlH4oMvK38t4FPe1gv1zc2TWy81; jac69156112=09093637; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1585914035|1585912685; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1585912686; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1585914036; UM_distinctid=1713fc327b1155-075cd0241399148-4c302f7e-144000-1713fc327b2328; CNZZDATA4478442=cnzz_eid%3D732218403-1585910396-%26ntime%3D1585910396; jpckey=%E5%AD%A6%E5%8E%86; LastActivityJoin=69156112,105332268947; join_69156112=1',
+    # 'Cookie': 'acw_tc=2f624a4c15859126853877402e62d4a0ffe71fe04433f4f22a1f6fc25631a9; .ASPXANONYMOUS=ZNpKYjtA1gEkAAAAMjIyMzdhMWEtOWI4ZS00ZjZhLTllM2YtNDk2NTQxM2RiNGY2RrlH4oMvK38t4FPe1gv1zc2TWy81; jac69156112=09093637; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1585914035|1585912685; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1585912686; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1585914036; UM_distinctid=1713fc327b1155-075cd0241399148-4c302f7e-144000-1713fc327b2328; CNZZDATA4478442=cnzz_eid%3D732218403-1585910396-%26ntime%3D1585910396; jpckey=%E5%AD%A6%E5%8E%86; LastActivityJoin=69156112,105332268947; join_69156112=1',
     'Content-Type': 'text/plain'
 }
-    # json转成字符串cookie
+
+
+# json转成字符串cookie
 def json2String(data):
     json_data = dict(data)
     # print(json_data)
@@ -32,6 +34,7 @@ def json2String(data):
         prefix = "{}={};".format(key, value)
         str += prefix
     return str.rstrip(';')
+
 
 def current_time(a):
     '''
@@ -74,18 +77,18 @@ def random_parameter():
     t = int(now_time * 1000)
     source = 'directphone'
     submittype = 1
-    ktimes = random_num(200, 575)
+    ktimes = random_num(110, 478)
     hlv = 1
-    rn = '2027509235.{}'.format(int(math.modf(now_time)[0] * 10000000))
+    lis = jqsignAndjqnonce()
+    rn = lis[0]  # '2027509235.{}'.format(int(math.modf(now_time)[0] * 10000000))
     jpm = 17
+    jqnonce = lis[1]
 
     return
 
 
-
-
 def jqsignAndjqnonce():
-    url = "https://www.wjx.cn/m/69156112.aspx"
+    url = "https://www.wjx.cn/m/69541443.aspx"
     head = {
         # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -97,32 +100,42 @@ def jqsignAndjqnonce():
         'Cookie': 'SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1585921170|1585921170'
     }
     res = requests.get(url)
-    print(res.cookies)
+    cookie = res.cookies
+    cookies_dict = requests.utils.dict_from_cookiejar(cookie)
+    c = json2String(cookies_dict)
+    headers['Cookie'] = c
 
-    soup = BeautifulSoup(res.text, 'html.parser')
+    # soup = BeautifulSoup(res.text, 'html.parser')
     # print(res.text)
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
     jqnonce = re.search("jqnonce=\".+\";", res.text).group(0)[9:-2]
 
-
-def dataenc(ktimes):
-    # function
-    # dataenc(a)
-    # {
-    #     var
-    # c, d, e, b = ktimes % 10;
-    # for (0 == b & & (b = 1),
-    #      c =[],
-    # d = 0; d < a.length; d++)
-    # e = a.charCodeAt(d) ^ b,
-    # c.push(String.fromCharCode(e));
-    # return c.join("")
-    # }
-
-    return
+    lis = []
+    lis.append(rndnum)
+    lis.append(jqnonce)
+    return lis
 
 
+def dataenc(jqnonce,ktimes):
+    '''
+        var c, d, e, b = ktimes % 10;
+        for (0 == b && (b = 1),
+                 c = [],
+                 d = 0; d < a.length; d++)
+            e = a.charCodeAt(d) ^ b,
+                c.push(String.fromCharCode(e));
+        return c.join("")
+    '''
+    b=ktimes%10
+    c=""
+    jq_lis=list(jqnonce)
+    if(b==0):
+        b=1
+    for d in range(len(list(jq_lis))-1):
+        temp=ord(jq_lis[d])^b
+        c+=(chr(temp))
 
+    return c
 
 
 def random_url():
@@ -137,16 +150,27 @@ ua = UserAgent()
 
 if __name__ == '__main__':
     res = requests.get("https://www.wjx.cn/m/69156112.aspx")
-    cookie=res.cookies
-    cookies_dict=requests.utils.dict_from_cookiejar(cookie)
-    c=json2String(cookies_dict)
-    print(c)
-    soup = BeautifulSoup(res.text, 'html.parser')
+
+    print(dataenc("08ddd9f8-69c1-4900-9e9e-dc211a32989e",123))
+
+    # for i in range(10):
+    #     print(i)
+    # print(ord('w'))
+    # c, d, e, b = 365 % 10
+    # print(c)
+    # print(b)
+
+
+    # cookie = res.cookies
+    # cookies_dict = requests.utils.dict_from_cookiejar(cookie)
+    # c = json2String(cookies_dict)
+    # print(c)
+    # soup = BeautifulSoup(res.text, 'html.parser')
     # print(res.text)
     # print(re.search("rndnum=\".+\";", res.text).group(0)[8:-2])
     # print(re.search("jqnonce=\".+\";", res.text).group(0)[9:-2])
     # print(re.search("rndnum=.*'", res))
-    url = "https://www.wjx.cn/joinnew/processjq.ashx?"
+    # url = "https://www.wjx.cn/joinnew/processjq.ashx?"
     # print(current_time(0))
     # print(current_time(3000))
     a = 123.456
