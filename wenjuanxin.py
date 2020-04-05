@@ -5,7 +5,10 @@ from faker import Factory
 import time
 import math
 import re
+from urllib import parse
 from bs4 import BeautifulSoup
+import threading
+import json
 from urllib.parse import urlencode
 
 headers = {
@@ -55,8 +58,8 @@ def random_num(min, max):
     return random.randrange(min, max)
 
 
-def random_parameter():
-    str = 'curid=69156112'
+def random_url(curid):
+
     '''
     随机请求参数
     :return:
@@ -75,16 +78,30 @@ def random_parameter():
     starttime = current_time(random_num(10, 50))
     now_time = time.time()
     t = int(now_time * 1000)
-    source = 'directphone'
-    submittype = 1
-    ktimes = random_num(110, 478)
+
+    #不知道有啥意义
+    # source = 'directphone'
+    # submittype = 1
+
+    ktimes = random_num(110, 428)+2
     hlv = 1
     lis = jqsignAndjqnonce()
     rn = lis[0]  # '2027509235.{}'.format(int(math.modf(now_time)[0] * 10000000))
-    jpm = 17
+    jpm = 2
     jqnonce = lis[1]
+    source=lis[2]
+    jqsign=dataenc(jqnonce,ktimes)
+    '''
+    curid=69541443&starttime=2020%2F4%2F4%2023%3A21%3A24&source=directphone&submittype=1&ktimes=123&hlv=1&rn=2027509235.94422000&jpm=2&t=1586013796384&jqnonce=08ddd9f8-69c1-4900-9e9e-dc211a32989e&jqsign=3%3Bggg%3Ae%3B.5%3A%602.7%3A33.%3Af%3Af.g%60122b01%3A%3B%3Af
+    '''
+    str="curid={}&starttime={}&source={}&submittype=1&ktimes={}&hlv={}&rn={}&jpm={}&t={}&jqnonce={}&jqsign={}".format(
+        curid,parse.quote(starttime).upper(),source,ktimes,hlv,rn,jpm,t,jqnonce,jqsign
+    )
 
-    return
+
+
+
+    return str
 
 
 def jqsignAndjqnonce():
@@ -109,10 +126,12 @@ def jqsignAndjqnonce():
     # print(res.text)
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
     jqnonce = re.search("jqnonce=\".+\";", res.text).group(0)[9:-2]
-
+    soup = BeautifulSoup(res.text, 'html.parser')
+    source=soup.find(attrs={'id':'source'}).attrs['value']
     lis = []
     lis.append(rndnum)
     lis.append(jqnonce)
+    lis.append(source)
     return lis
 
 
@@ -138,21 +157,66 @@ def dataenc(jqnonce,ktimes):
     return c
 
 
-def random_url():
+def random_parameter():
     '''
     随机请求url
     :return:
     '''
+    url=" https://www.wjx.cn/joinnew/processjq.ashx?"+random_url(69541443)
+    print(url)
     return
+
+ips=[] #ip列表
+mutex=0 #标志位
+
+class GetIpThread(threading.Thread):
+    def __init__(self, fetchSecond):
+        super(GetIpThread, self).__init__();
+        self.fetchSecond = fetchSecond;
+
+    def run(self):
+        lis=[]
+        for i in range(3):
+            lis.append(i+1)
+        global mutex
+        while True:
+            apiUrl="https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1,7))
+            # 获取IP列表
+            res = requests.get(apiUrl,timeout=30)
+            content=json.loads(res.text,encoding='utf-8')['data']['data']
+            # 按照\n分割获取到的IP
+            mutex=1
+            ips.clear()
+
+            for item in content:
+                ips.append("{}:{}".format(item['ip'],item['port']))
+
+            mutex=0
+            # print("长度：{}，{}".format(len(ips),ips))
+            # ips = res.split('\n');
+            # # 利用每一个IP
+            # for proxyip in ips:
+            #
+            #     if proxyip.strip() == '':
+            #         continue
+            #
+            #     print(proxyip)
+            #     # 开启一个线程
+            #     CrawlThread(proxyip).start();
+            # 休眠
+            time.sleep(self.fetchSecond);
 
 
 ua = UserAgent()
 
 if __name__ == '__main__':
-    res = requests.get("https://www.wjx.cn/m/69156112.aspx")
-
-    print(dataenc("08ddd9f8-69c1-4900-9e9e-dc211a32989e",123))
-
+    res = requests.get("https://www.wjx.cn/m/69541443.aspx")
+    random_parameter()
+    # print(random_parameter(69541443))
+    # print(parse.quote("3;ggg:e;.5:`2.7:33.:f:f.g`122b01:;:f"))
+    # print(dataenc("08ddd9f8-69c1-4900-9e9e-dc211a32989e",123))
+    # soup = BeautifulSoup(res.text, 'html.parser')
+    # print(soup.find(attrs={'id':'source'}).attrs['value'])
     # for i in range(10):
     #     print(i)
     # print(ord('w'))
