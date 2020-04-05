@@ -152,37 +152,108 @@ def dataenc(jqnonce, ktimes):
         c += (chr(temp))
 
     return c
-titile_keyword=[]
 
-#使用中文分词器生成句子
-def genertate_sentence(sentence):
-    head = {
-        'authority': 'suulnnka.github.io',
-        'pragma': 'no-cache',
-        'cache-control': 'no-cache',
-        'upgrade-insecure-requests': '1',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-        'sec-fetch-dest': 'document',
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'sec-fetch-site': 'same-origin',
-        'sec-fetch-mode': 'navigate',
-        'sec-fetch-user': '?1',
-        'accept-language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-        'cookie': '_ga=GA1.1.1671311673.1586085770; Hm_lvt_058d1e446dd338b69f2e385ba2f930f2=1586085992,1586086005,1586086197,1586086240; Hm_lpvt_058d1e446dd338b69f2e385ba2f930f2=1586086496; _ga_BM8WXEWW3P=GS1.1.1586085769.1.1.1586086550.0'
+
+titile_keyword = []
+
+
+# 使用中文分词器生成句子
+def genertate_sentence():
+    #jieba生成器
+    # head = {
+    #     'authority': 'suulnnka.github.io',
+    #     'pragma': 'no-cache',
+    #     'cache-control': 'no-cache',
+    #     'upgrade-insecure-requests': '1',
+    #     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+    #     'sec-fetch-dest': 'document',
+    #     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    #     'sec-fetch-site': 'same-origin',
+    #     'sec-fetch-mode': 'navigate',
+    #     'sec-fetch-user': '?1',
+    #     'accept-language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+    #     'cookie': '_ga=GA1.1.1671311673.1586085770; Hm_lvt_058d1e446dd338b69f2e385ba2f930f2=1586085992,1586086005,1586086197,1586086240; Hm_lpvt_058d1e446dd338b69f2e385ba2f930f2=1586086496; _ga_BM8WXEWW3P=GS1.1.1586085769.1.1.1586086550.0'
+    # }
+    # for x in jieba.analyse.extract_tags(sentence, withFlag=True):
+    #     titile_keyword.append(x)
+    # num = random_num(0, len(titile_keyword) - 1)
+    # bllShitapi = "https://suulnnka.github.io/BullshitGenerator/index.html?主题={}&随机种子={}".format(
+    #     titile_keyword[num], random_num(214013, 999999999)
+    # )
+    #
+    # res = requests.get(bllShitapi, head)
+    # soup = BeautifulSoup(res.text, "html.parser")
+    # soup.div
+    first_head = {
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+        'Sec-Fetch-Dest': 'document',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Sec-Fetch-Site': 'cross-site',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-User': '?1',
+        'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6'
     }
-    for x in jieba.analyse.extract_tags(sentence,withFlag=True):
-        titile_keyword.append(x)
-    num=random_num(0,len(titile_keyword)-1)
-    bllShitapi="https://suulnnka.github.io/BullshitGenerator/index.html?主题={}&随机种子={}".format(
-        titile_keyword[num],random_num(214013,999999999)
-    )
 
-    res=requests.get(bllShitapi,head)
-    soup=BeautifulSoup(res.text,"html.parser")
-    soup.div
-    return
+    last_head = {
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+        'Sec-Fetch-Dest': 'empty',
+        # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+        'Content-type': 'application/x-www-form-urlencoded',
+        'Accept': '*/*',
+        'Origin': 'https://www.qqxiuzi.cn',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Referer': 'https://www.qqxiuzi.cn/zh/suiji-hanzi/',
+        'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+        # 'Cookie': 'PHPSESSID=3lf1onhvm9btb4o1j3v36rpb06; Hm_lvt_899df2cdf7f5a83a719fb1bb96982b18=1586088940,1586098893; Hm_lpvt_899df2cdf7f5a83a719fb1bb96982b18=1586099220; __gads=ID=dc5362b91b08801b:T=1586099219:S=ALNI_MZVe6pZs1c4h01Nyny6t-wtphUIZQ',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    # bllShitapi="https://suulnnka.github.io/BullshitGenerator/index.html?主题={}&随机种子={}".format(
+    #     '灭霸',random_num(214013,999999999)
+    # )
+    first_url = "https://www.qqxiuzi.cn/zh/suiji-hanzi/"
+    first_head['User-Agent']=ua.random
+    res1 = requests.get(first_url, headers=first_head)
+    token=re.search("&token=.+\'",res1.text).group(0)[7:-1]
 
 
+    cookie = res1.cookies
+    cookies_dict = requests.utils.dict_from_cookiejar(cookie)
+    c = json2String(cookies_dict)
+    last_head['Cookie'] = c
+
+    last_url = "https://www.qqxiuzi.cn/zh/suiji-hanzi/show.php"
+    last_head['User-Agent']=ua.random
+    datas={
+        'type':'ciyu',
+        'hz1':'null',
+        'hz2':'null',
+        'hz3':'null',
+        'cy2':'null',
+        'cy3':'null',
+        'cy4':4,
+        'cy5':'null',
+        'text':'',
+        'num':15,
+        'token':token
+
+    }
+    res2=requests.post(last_url,headers=last_head,data=datas)
+    res2.encoding='utf-8'
+    soup2 = BeautifulSoup(res2.text, "html.parser")
+    ciyu_str=''
+    for item in soup2.select('div'):
+         ciyu_str+=item.text
+
+
+
+    return ciyu_str
 
 
 ips = []  # ip列表
@@ -227,13 +298,13 @@ class GetIpThread(threading.Thread):
             time.sleep(self.fetchSecond);
 
 
-#获取问卷星题目个数
-default_url = "https://www.wjx.cn/m/69541443.aspx"
-res = requests.get(default_url)
-soup = BeautifulSoup(res.text, 'html.parser')
-div=soup.find_all("div",attrs={'class':'field ui-field-contain'})
-
-div_num=len(div)
+# 获取问卷星题目个数
+# default_url = "https://www.wjx.cn/m/69541443.aspx"
+# res = requests.get(default_url)
+# soup = BeautifulSoup(res.text, 'html.parser')
+# div = soup.find_all("div", attrs={'class': 'field ui-field-contain'})
+#
+# div_num = len(div)
 
 
 def random_parameter():
@@ -243,7 +314,7 @@ def random_parameter():
     :return:
     '''
     url = " https://www.wjx.cn/joinnew/processjq.ashx?" + random_url(69541443)
-    parameter=''
+    parameter = ''
     for i in range(div_num):
         parameter
     print(url)
@@ -253,11 +324,11 @@ def random_parameter():
 ua = UserAgent()
 
 if __name__ == '__main__':
-    res = requests.get("https://www.wjx.cn/m/69541443.aspx")
-    # random_parameter()
-    genertate_sentence("大学生生活费情况调查[复制]")
+    # res = requests.get("https://www.wjx.cn/m/69541443.aspx")
+    # # random_parameter()
+    # genertate_sentence("大学生生活费情况调查[复制]")
 
-    head = {
+    first_head = {
         'Connection': 'keep-alive',
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
@@ -268,25 +339,64 @@ if __name__ == '__main__':
         'Sec-Fetch-Site': 'cross-site',
         'Sec-Fetch-Mode': 'navigate',
         'Sec-Fetch-User': '?1',
+        'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6'
+    }
+
+    last_head = {
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+        'Sec-Fetch-Dest': 'empty',
+        # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+        'Content-type': 'application/x-www-form-urlencoded',
+        'Accept': '*/*',
+        'Origin': 'https://www.qqxiuzi.cn',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Referer': 'https://www.qqxiuzi.cn/zh/suiji-hanzi/',
         'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-        'Cookie': 'PHPSESSID=imj689ctblu9u4od16olv06d00; __gads=ID=08c2c95ec46829ee:T=1586088940:S=ALNI_MYBnsPkN4H0SJkdHZijHx5i60vQ_w; Hm_lvt_899df2cdf7f5a83a719fb1bb96982b18=1586088940,1586098893; Hm_lpvt_899df2cdf7f5a83a719fb1bb96982b18=1586098968'
+        # 'Cookie': 'PHPSESSID=3lf1onhvm9btb4o1j3v36rpb06; Hm_lvt_899df2cdf7f5a83a719fb1bb96982b18=1586088940,1586098893; Hm_lpvt_899df2cdf7f5a83a719fb1bb96982b18=1586099220; __gads=ID=dc5362b91b08801b:T=1586099219:S=ALNI_MZVe6pZs1c4h01Nyny6t-wtphUIZQ',
+        'Content-Type': 'application/x-www-form-urlencoded'
     }
     # bllShitapi="https://suulnnka.github.io/BullshitGenerator/index.html?主题={}&随机种子={}".format(
     #     '灭霸',random_num(214013,999999999)
     # )
-
-    res=requests.get(bllShitapi,head)
-    soup=BeautifulSoup(res.text,"html.parser")
-    print(soup.select('#文章 > div:nth-child(1)'))
-
-
+    first_url = "https://www.qqxiuzi.cn/zh/suiji-hanzi/"
+    first_head['User-Agent']=ua.random
+    res1 = requests.get(first_url, headers=first_head)
+    token=re.search("&token=.+\'",res1.text).group(0)[7:-1]
 
 
-    print(len(titile_keyword))
-    print(div_num)
+    cookie = res1.cookies
+    cookies_dict = requests.utils.dict_from_cookiejar(cookie)
+    c = json2String(cookies_dict)
+    last_head['Cookie'] = c
 
+    last_url = "https://www.qqxiuzi.cn/zh/suiji-hanzi/show.php"
+    last_head['User-Agent']=ua.random
+    datas={
+        'type':'ciyu',
+        'hz1':'null',
+        'hz2':'null',
+        'hz3':'null',
+        'cy2':'null',
+        'cy3':'null',
+        'cy4':4,
+        'cy5':'null',
+        'text':'',
+        'num':15,
+        'token':token
 
-
+    }
+    res2=requests.post(last_url,headers=last_head,data=datas)
+    res2.encoding='utf-8'
+    soup2 = BeautifulSoup(res2.text, "html.parser")
+    ciyu_str=''
+    for item in soup2.select('div'):
+         ciyu_str+=item.text
+    print(ciyu_str)
+    # print(len(titile_keyword))
+    # print(div_num)
 
     # print(random_parameter(69541443))
     # print(parse.quote("3;ggg:e;.5:`2.7:33.:f:f.g`122b01:;:f"))
@@ -312,19 +422,19 @@ if __name__ == '__main__':
     # url = "https://www.wjx.cn/joinnew/processjq.ashx?"
     # print(current_time(0))
     # print(current_time(3000))
-    a = 123.456
+    # a = 123.456
+    # time_str = time.time()
+    # b = math.modf(time_str)[0]
+    # print(int(b * 10000000))
 
-    time_str = time.time()
-    b = math.modf(time_str)[0]
-    print(int(b * 10000000))
     # print(time.time())
-    print(int(time.time() * 1000))
+    # print(int(time.time() * 1000))
     # print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
     # print(random_num(150, 350))
-    print()
+    # print()
+
     # zh_CN 表示中国大陆版
     fake = Factory().create('zh_CN')
-
     # 随机产生省份
     print(fake.province())
     # 随机产生城市
