@@ -9,6 +9,7 @@ from urllib import parse
 from bs4 import BeautifulSoup
 import threading
 import json
+import jieba.analyse
 from urllib.parse import urlencode
 
 headers = {
@@ -59,7 +60,6 @@ def random_num(min, max):
 
 
 def random_url(curid):
-
     '''
     随机请求参数
     :return:
@@ -79,27 +79,24 @@ def random_url(curid):
     now_time = time.time()
     t = int(now_time * 1000)
 
-    #不知道有啥意义
+    # 不知道有啥意义
     # source = 'directphone'
     # submittype = 1
 
-    ktimes = random_num(110, 428)+2
+    ktimes = random_num(110, 428) + 2
     hlv = 1
     lis = jqsignAndjqnonce()
     rn = lis[0]  # '2027509235.{}'.format(int(math.modf(now_time)[0] * 10000000))
     jpm = 2
     jqnonce = lis[1]
-    source=lis[2]
-    jqsign=dataenc(jqnonce,ktimes)
+    source = lis[2]
+    jqsign = dataenc(jqnonce, ktimes)
     '''
     curid=69541443&starttime=2020%2F4%2F4%2023%3A21%3A24&source=directphone&submittype=1&ktimes=123&hlv=1&rn=2027509235.94422000&jpm=2&t=1586013796384&jqnonce=08ddd9f8-69c1-4900-9e9e-dc211a32989e&jqsign=3%3Bggg%3Ae%3B.5%3A%602.7%3A33.%3Af%3Af.g%60122b01%3A%3B%3Af
     '''
-    str="curid={}&starttime={}&source={}&submittype=1&ktimes={}&hlv={}&rn={}&jpm={}&t={}&jqnonce={}&jqsign={}".format(
-        curid,parse.quote(starttime).upper(),source,ktimes,hlv,rn,jpm,t,jqnonce,jqsign
+    str = "curid={}&starttime={}&source={}&submittype=1&ktimes={}&hlv={}&rn={}&jpm={}&t={}&jqnonce={}&jqsign={}".format(
+        curid, parse.quote(starttime).upper(), source, ktimes, hlv, rn, jpm, t, jqnonce, jqsign
     )
-
-
-
 
     return str
 
@@ -127,7 +124,7 @@ def jqsignAndjqnonce():
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
     jqnonce = re.search("jqnonce=\".+\";", res.text).group(0)[9:-2]
     soup = BeautifulSoup(res.text, 'html.parser')
-    source=soup.find(attrs={'id':'source'}).attrs['value']
+    source = soup.find(attrs={'id': 'source'}).attrs['value']
     lis = []
     lis.append(rndnum)
     lis.append(jqnonce)
@@ -135,7 +132,7 @@ def jqsignAndjqnonce():
     return lis
 
 
-def dataenc(jqnonce,ktimes):
+def dataenc(jqnonce, ktimes):
     '''
         var c, d, e, b = ktimes % 10;
         for (0 == b && (b = 1),
@@ -145,29 +142,52 @@ def dataenc(jqnonce,ktimes):
                 c.push(String.fromCharCode(e));
         return c.join("")
     '''
-    b=ktimes%10
-    c=""
-    jq_lis=list(jqnonce)
-    if(b==0):
-        b=1
-    for d in range(len(list(jq_lis))-1):
-        temp=ord(jq_lis[d])^b
-        c+=(chr(temp))
+    b = ktimes % 10
+    c = ""
+    jq_lis = list(jqnonce)
+    if (b == 0):
+        b = 1
+    for d in range(len(list(jq_lis)) - 1):
+        temp = ord(jq_lis[d]) ^ b
+        c += (chr(temp))
 
     return c
+titile_keyword=[]
 
+#使用中文分词器生成句子
+def genertate_sentence(sentence):
+    head = {
+        'authority': 'suulnnka.github.io',
+        'pragma': 'no-cache',
+        'cache-control': 'no-cache',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+        'sec-fetch-dest': 'document',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-user': '?1',
+        'accept-language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+        'cookie': '_ga=GA1.1.1671311673.1586085770; Hm_lvt_058d1e446dd338b69f2e385ba2f930f2=1586085992,1586086005,1586086197,1586086240; Hm_lpvt_058d1e446dd338b69f2e385ba2f930f2=1586086496; _ga_BM8WXEWW3P=GS1.1.1586085769.1.1.1586086550.0'
+    }
+    for x in jieba.analyse.extract_tags(sentence,withFlag=True):
+        titile_keyword.append(x)
+    num=random_num(0,len(titile_keyword)-1)
+    bllShitapi="https://suulnnka.github.io/BullshitGenerator/index.html?主题={}&随机种子={}".format(
+        titile_keyword[num],random_num(214013,999999999)
+    )
 
-def random_parameter():
-    '''
-    随机请求url
-    :return:
-    '''
-    url=" https://www.wjx.cn/joinnew/processjq.ashx?"+random_url(69541443)
-    print(url)
+    res=requests.get(bllShitapi,head)
+    soup=BeautifulSoup(res.text,"html.parser")
+    soup.div
     return
 
-ips=[] #ip列表
-mutex=0 #标志位
+
+
+
+ips = []  # ip列表
+mutex = 0  # 标志位
+
 
 class GetIpThread(threading.Thread):
     def __init__(self, fetchSecond):
@@ -175,23 +195,23 @@ class GetIpThread(threading.Thread):
         self.fetchSecond = fetchSecond;
 
     def run(self):
-        lis=[]
+        lis = []
         for i in range(3):
-            lis.append(i+1)
+            lis.append(i + 1)
         global mutex
         while True:
-            apiUrl="https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1,7))
+            apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
             # 获取IP列表
-            res = requests.get(apiUrl,timeout=30)
-            content=json.loads(res.text,encoding='utf-8')['data']['data']
+            res = requests.get(apiUrl, timeout=30)
+            content = json.loads(res.text, encoding='utf-8')['data']['data']
             # 按照\n分割获取到的IP
-            mutex=1
+            mutex = 1
             ips.clear()
 
             for item in content:
-                ips.append("{}:{}".format(item['ip'],item['port']))
+                ips.append("{}:{}".format(item['ip'], item['port']))
 
-            mutex=0
+            mutex = 0
             # print("长度：{}，{}".format(len(ips),ips))
             # ips = res.split('\n');
             # # 利用每一个IP
@@ -207,11 +227,67 @@ class GetIpThread(threading.Thread):
             time.sleep(self.fetchSecond);
 
 
+#获取问卷星题目个数
+default_url = "https://www.wjx.cn/m/69541443.aspx"
+res = requests.get(default_url)
+soup = BeautifulSoup(res.text, 'html.parser')
+div=soup.find_all("div",attrs={'class':'field ui-field-contain'})
+
+div_num=len(div)
+
+
+def random_parameter():
+    '''
+    生成1$1}2$2}3$3}4$1}5$3}6$2}7$2}8$2}9$2}10$2}11$1}12$1}13$
+       1$2}2$2}3$1}4$3}5$3}6$3}7$3}8$2}9$2}10$2}11$4}12$1|2|3|4|5}13$
+    :return:
+    '''
+    url = " https://www.wjx.cn/joinnew/processjq.ashx?" + random_url(69541443)
+    parameter=''
+    for i in range(div_num):
+        parameter
+    print(url)
+    return
+
+
 ua = UserAgent()
 
 if __name__ == '__main__':
     res = requests.get("https://www.wjx.cn/m/69541443.aspx")
-    random_parameter()
+    # random_parameter()
+    genertate_sentence("大学生生活费情况调查[复制]")
+
+    head = {
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+        'Sec-Fetch-Dest': 'document',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Sec-Fetch-Site': 'cross-site',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-User': '?1',
+        'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+        'Cookie': 'PHPSESSID=imj689ctblu9u4od16olv06d00; __gads=ID=08c2c95ec46829ee:T=1586088940:S=ALNI_MYBnsPkN4H0SJkdHZijHx5i60vQ_w; Hm_lvt_899df2cdf7f5a83a719fb1bb96982b18=1586088940,1586098893; Hm_lpvt_899df2cdf7f5a83a719fb1bb96982b18=1586098968'
+    }
+    # bllShitapi="https://suulnnka.github.io/BullshitGenerator/index.html?主题={}&随机种子={}".format(
+    #     '灭霸',random_num(214013,999999999)
+    # )
+
+    res=requests.get(bllShitapi,head)
+    soup=BeautifulSoup(res.text,"html.parser")
+    print(soup.select('#文章 > div:nth-child(1)'))
+
+
+
+
+    print(len(titile_keyword))
+    print(div_num)
+
+
+
+
     # print(random_parameter(69541443))
     # print(parse.quote("3;ggg:e;.5:`2.7:33.:f:f.g`122b01:;:f"))
     # print(dataenc("08ddd9f8-69c1-4900-9e9e-dc211a32989e",123))
@@ -223,7 +299,6 @@ if __name__ == '__main__':
     # c, d, e, b = 365 % 10
     # print(c)
     # print(b)
-
 
     # cookie = res.cookies
     # cookies_dict = requests.utils.dict_from_cookiejar(cookie)
