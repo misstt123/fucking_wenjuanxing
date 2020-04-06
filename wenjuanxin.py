@@ -122,27 +122,30 @@ def random_url(curid):
     return str
 
 
-url_cookie = ''
 
 
 def jqsignAndjqnonce():
     url = "https://www.wjx.cn/m/69541443.aspx"
     head = {
-        # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
         'Connection': 'keep-alive',
-        'Cookie': 'acw_tc=2f624a4c15859126853877402e62d4a0ffe71fe04433f4f22a1f6fc25631a9; .ASPXANONYMOUS=ZNpKYjtA1gEkAAAAMjIyMzdhMWEtOWI4ZS00ZjZhLTllM2YtNDk2NTQxM2RiNGY2RrlH4oMvK38t4FPe1gv1zc2TWy81; SERVERID=0f3eb8fcde19feef85b46d49c555413b|1585933053|1585933053; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1585912686; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1585933055; UM_distinctid=1713fc327b1155-075cd0241399148-4c302f7e-144000-1713fc327b2328; CNZZDATA4478442=cnzz_eid%3D732218403-1585910396-%26ntime%3D1585931996; jac69156112=45696809',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
         'Upgrade-Insecure-Requests': '1',
-        'Cache-Control': 'max-age=0',
-        'Cookie': 'SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1585921170|1585921170'
+        # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+        'Sec-Fetch-Dest': 'document',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-User': '?1',
+        'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
     }
-    res = requests.get(url)
+    head['User-Agent']=ua.random
+    res = requests.get(url,headers=head)
     cookie = res.cookies
     cookies_dict = requests.utils.dict_from_cookiejar(cookie)
     c = json2String(cookies_dict)
     headers['Cookie'] = c
-    url_cookie
+    headers['User-Agent']=head['User-Agent']
     # soup = BeautifulSoup(res.text, 'html.parser')
     # print(res.text)
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
@@ -264,7 +267,7 @@ def genertate_sentence():
         'cy4': 4,
         'cy5': 'null',
         'text': '',
-        'num': 10,
+        'num': 4,
         'token': token
 
     }
@@ -305,6 +308,7 @@ class GetIpThread(threading.Thread):
                 ips.append("{}:{}".format(item['ip'], item['port']))
 
             mutex = 0
+            print(ips)
             # print("长度：{}，{}".format(len(ips),ips))
             # ips = res.split('\n');
             # # 利用每一个IP
@@ -392,11 +396,12 @@ def random_parameter():
 
             ss = '{}${}'.format(i + 1, pos_str) + '}'
         parameter += ss
-    parameter = parse.quote(parameter.rstrip('}'))
-    # print(parameter)
+    parameter = 'submitdata='+parse.quote(parameter.rstrip('}'))
+    print(parameter)
     # print(url)
     headers['User-Agent']=ua.random
-    res = requests.post(url, headers=headers, data={'submitdata': parameter})
+    index=random_num(0,len(ips)-1)
+    res = requests.post(url, headers=headers, data=parameter,proxies={'http':'http://{}'.format(ips[index])})
     print(res.text)
     print(res.status_code)
     return
@@ -411,6 +416,9 @@ if __name__ == '__main__':
     #
     # print(h)
 
+    GetIpThread(10).start()
+
+    time.sleep(2)
     print(random_parameter())
     print()
 
