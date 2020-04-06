@@ -13,6 +13,8 @@ import jieba.analyse
 from urllib.parse import urlencode
 
 ua = UserAgent()
+
+'''
 headers = {
     # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0',
     'Accept': 'text/plain, */*; q=0.01',
@@ -23,6 +25,24 @@ headers = {
     'Connection': 'keep-alive',
     'Referer': 'https://www.wjx.cn/m/69156112.aspx',
     # 'Cookie': 'acw_tc=2f624a4c15859126853877402e62d4a0ffe71fe04433f4f22a1f6fc25631a9; .ASPXANONYMOUS=ZNpKYjtA1gEkAAAAMjIyMzdhMWEtOWI4ZS00ZjZhLTllM2YtNDk2NTQxM2RiNGY2RrlH4oMvK38t4FPe1gv1zc2TWy81; jac69156112=09093637; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1585914035|1585912685; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1585912686; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1585914036; UM_distinctid=1713fc327b1155-075cd0241399148-4c302f7e-144000-1713fc327b2328; CNZZDATA4478442=cnzz_eid%3D732218403-1585910396-%26ntime%3D1585910396; jpckey=%E5%AD%A6%E5%8E%86; LastActivityJoin=69156112,105332268947; join_69156112=1',
+    'Content-Type': 'text/plain'
+}
+'''
+headers = {
+    'Connection': 'keep-alive',
+    'Pragma': 'no-cache',
+    'Cache-Control': 'no-cache',
+    'Accept': 'text/plain, */*; q=0.01',
+    'Sec-Fetch-Dest': 'empty',
+    'X-Requested-With': 'XMLHttpRequest',
+    # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Origin': 'https://www.wjx.cn',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-Mode': 'cors',
+    'Referer': 'https://www.wjx.cn/m/69541443.aspx',
+    'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+    #'Cookie': 'acw_tc=707c9fd015861022902862957e5a12c8cfc985fc911ba2e6507fb7335474c3; .ASPXANONYMOUS=J3yj1_RB1gEkAAAAZWJkZmQwODItNzcwMy00NjZkLTliZTQtMGY1MThmZjMyYThm9f0vRsZ_HsxWyDjfkoiyf5WhNsU1; UM_distinctid=1714b10484e55-0ff6d4825411f7-4313f6f-144000-1714b10484f19d; jaward105375985068=1; SojumpABX_4563=1; award_69541443=1; jac69541443=35049556; join_69541443=1; CNZZDATA4478442=cnzz_eid%3D1132456625-1586101979-%26ntime%3D1586182979; crudat=2020-04-04 21:02:52; SojumpSurvey=0102AF1EFD8C39DAD708FEAFBE0E145BDAD70800076C00790068005F0067006F00640000012F00FF6E6B9B1D0BE3472D9E0FC237FDC4D08842BCF815; WjxUser=UserName=lyh_god; LastCheckUpdateDate=1; spiderregkey=baidu.com%c2%a7%e9%97%ae%e5%8d%b7%e6%98%9f%c2%a71; baidutgkey=%u95EE%u5377%u661F%u54C1%u4E13%u6807%u9898%7C4%7Cbaidu; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586076438,1586184498,1586184676,1586184742; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586185264797; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586185298; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586185297|1586183192; jpckey=%E5%8C%96%E5%A6%86',
     'Content-Type': 'text/plain'
 }
 
@@ -102,6 +122,9 @@ def random_url(curid):
     return str
 
 
+url_cookie = ''
+
+
 def jqsignAndjqnonce():
     url = "https://www.wjx.cn/m/69541443.aspx"
     head = {
@@ -119,7 +142,7 @@ def jqsignAndjqnonce():
     cookies_dict = requests.utils.dict_from_cookiejar(cookie)
     c = json2String(cookies_dict)
     headers['Cookie'] = c
-
+    url_cookie
     # soup = BeautifulSoup(res.text, 'html.parser')
     # print(res.text)
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
@@ -133,6 +156,7 @@ def jqsignAndjqnonce():
     return lis
 
 
+# 求jssign和jsnonce
 def dataenc(jqnonce, ktimes):
     '''
         var c, d, e, b = ktimes % 10;
@@ -155,7 +179,7 @@ def dataenc(jqnonce, ktimes):
     return c
 
 
-titile_keyword = []
+# titile_keyword = []
 
 
 # 使用中文分词器生成句子
@@ -311,8 +335,8 @@ default_head = {
     'Sec-Fetch-User': '?1',
     'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6'
 }
-default_head['User-Agent']=ua.random
-res = requests.get(default_url,headers=default_head)
+default_head['User-Agent'] = ua.random
+res = requests.get(default_url, headers=default_head)
 soup = BeautifulSoup(res.text, 'html.parser')
 div = soup.find_all("div", attrs={'class': 'field ui-field-contain'})
 
@@ -320,23 +344,22 @@ div = soup.find_all("div", attrs={'class': 'field ui-field-contain'})
 div_num = len(div)
 # print(div_num)
 # .find_all('div'))
-type_lis=[]
+type_lis = []
 # print(len(div[12].find_all('div', attrs={'class': 'ui-controlgroup'})[0]))
 for item in div:
     # print(type(item['type']))
-    option_num=0
-    if(item['type']=='1'):
-        option_num=1
+    option_num = 0
+    if (item['type'] == '1'):
+        option_num = 1
     else:
-        option_num=len(item.find_all('div', attrs={'class': 'ui-controlgroup'})[0])
+        option_num = len(item.find_all('div', attrs={'class': 'ui-controlgroup'})[0])
     # print(item['type'])
-    dic_item={
-        'type':item['type'],
-        'num':option_num
+    dic_item = {
+        'type': item['type'],
+        'num': option_num
 
     }
     type_lis.append(dic_item)
-
 
 
 def random_parameter():
@@ -345,34 +368,38 @@ def random_parameter():
        1$2} 2$2}3$1}4$3}5$3}6$3}7$3}8$2}9$2}10$2}11$4}12$1|2|3|4|5}13$
     :return:
     '''
+
+
     url = " https://www.wjx.cn/joinnew/processjq.ashx?" + random_url(69541443)
     parameter = ''
     for i in range(div_num):
 
-        if(type_lis[i]['type']=='1'):
-            ss='{}${}'.format(i+1,genertate_sentence())+'}'
-        elif(type_lis[i]['type']=='3'):
-            ss='{}${}'.format(i+1,random_num(1,int(type_lis[i]['num'])))+'}'
-        elif(type_lis[i]['type']=='4'):
+        if (type_lis[i]['type'] == '1'):
+            ss = '{}${}'.format(i + 1, genertate_sentence()) + '}'
+        elif (type_lis[i]['type'] == '3'):
+            ss = '{}${}'.format(i + 1, random_num(1, int(type_lis[i]['num']))) + '}'
+        elif (type_lis[i]['type'] == '4'):
 
-            single_num=random_num(0,int(type_lis[i]['num']))
+            single_num = random_num(0, int(type_lis[i]['num']))
             h_set = set()
             while (len(h_set) < single_num):
                 h_set.add(random.randint(1, int(type_lis[i]['num'])))
-            pos_str=''
+            pos_str = ''
             for item in h_set:
                 pos_str += ('|' + str(item))
-            pos_str=pos_str.lstrip('|')
+            pos_str = pos_str.lstrip('|')
             # print(pos_str)
 
             ss = '{}${}'.format(i + 1, pos_str) + '}'
-        parameter+=ss
-    parameter=parse.quote(parameter.rstrip('}'))
-    print(parameter)
+        parameter += ss
+    parameter = parse.quote(parameter.rstrip('}'))
+    # print(parameter)
     # print(url)
+    headers['User-Agent']=ua.random
+    res = requests.post(url, headers=headers, data={'submitdata': parameter})
+    print(res.text)
+    print(res.status_code)
     return
-
-
 
 
 if __name__ == '__main__':
@@ -385,9 +412,7 @@ if __name__ == '__main__':
     # print(h)
 
     print(random_parameter())
-
-
-
+    print()
 
     # h={1,2,3,5,7,9,1334}
     # ss=''

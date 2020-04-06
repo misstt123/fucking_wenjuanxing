@@ -4817,6 +4817,7 @@ window.reachMaxCheatCount = !1,
             for (e = pageHolder[A].questions,
                      g = 0; g < e.length; g++)
                 checkPeiE($(e[g]));
+
         if (null != $("#ctlNext") && $("#ctlNext").on("click", function () {
             var a, b;
             if (debugLog("准备提交答卷"),
