@@ -42,7 +42,7 @@ headers = {
     'Sec-Fetch-Mode': 'cors',
     'Referer': 'https://www.wjx.cn/m/69541443.aspx',
     'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-    #'Cookie': 'acw_tc=707c9fd015861022902862957e5a12c8cfc985fc911ba2e6507fb7335474c3; .ASPXANONYMOUS=J3yj1_RB1gEkAAAAZWJkZmQwODItNzcwMy00NjZkLTliZTQtMGY1MThmZjMyYThm9f0vRsZ_HsxWyDjfkoiyf5WhNsU1; UM_distinctid=1714b10484e55-0ff6d4825411f7-4313f6f-144000-1714b10484f19d; jaward105375985068=1; SojumpABX_4563=1; award_69541443=1; jac69541443=35049556; join_69541443=1; CNZZDATA4478442=cnzz_eid%3D1132456625-1586101979-%26ntime%3D1586182979; crudat=2020-04-04 21:02:52; SojumpSurvey=0102AF1EFD8C39DAD708FEAFBE0E145BDAD70800076C00790068005F0067006F00640000012F00FF6E6B9B1D0BE3472D9E0FC237FDC4D08842BCF815; WjxUser=UserName=lyh_god; LastCheckUpdateDate=1; spiderregkey=baidu.com%c2%a7%e9%97%ae%e5%8d%b7%e6%98%9f%c2%a71; baidutgkey=%u95EE%u5377%u661F%u54C1%u4E13%u6807%u9898%7C4%7Cbaidu; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586076438,1586184498,1586184676,1586184742; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586185264797; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586185298; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586185297|1586183192; jpckey=%E5%8C%96%E5%A6%86',
+    # 'Cookie': 'acw_tc=707c9fd015861022902862957e5a12c8cfc985fc911ba2e6507fb7335474c3; .ASPXANONYMOUS=J3yj1_RB1gEkAAAAZWJkZmQwODItNzcwMy00NjZkLTliZTQtMGY1MThmZjMyYThm9f0vRsZ_HsxWyDjfkoiyf5WhNsU1; UM_distinctid=1714b10484e55-0ff6d4825411f7-4313f6f-144000-1714b10484f19d; jaward105375985068=1; SojumpABX_4563=1; award_69541443=1; jac69541443=35049556; join_69541443=1; CNZZDATA4478442=cnzz_eid%3D1132456625-1586101979-%26ntime%3D1586182979; crudat=2020-04-04 21:02:52; SojumpSurvey=0102AF1EFD8C39DAD708FEAFBE0E145BDAD70800076C00790068005F0067006F00640000012F00FF6E6B9B1D0BE3472D9E0FC237FDC4D08842BCF815; WjxUser=UserName=lyh_god; LastCheckUpdateDate=1; spiderregkey=baidu.com%c2%a7%e9%97%ae%e5%8d%b7%e6%98%9f%c2%a71; baidutgkey=%u95EE%u5377%u661F%u54C1%u4E13%u6807%u9898%7C4%7Cbaidu; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586076438,1586184498,1586184676,1586184742; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586185264797; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586185298; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586185297|1586183192; jpckey=%E5%8C%96%E5%A6%86',
     'Content-Type': 'text/plain'
 }
 
@@ -112,6 +112,7 @@ def random_url(curid):
     jqnonce = lis[1]
     source = lis[2]
     jqsign = dataenc(jqnonce, ktimes)
+    print(jqsign)
     '''
     curid=69541443&starttime=2020%2F4%2F4%2023%3A21%3A24&source=directphone&submittype=1&ktimes=123&hlv=1&rn=2027509235.94422000&jpm=2&t=1586013796384&jqnonce=08ddd9f8-69c1-4900-9e9e-dc211a32989e&jqsign=3%3Bggg%3Ae%3B.5%3A%602.7%3A33.%3Af%3Af.g%60122b01%3A%3B%3Af
     '''
@@ -120,8 +121,6 @@ def random_url(curid):
     )
 
     return str
-
-
 
 
 def jqsignAndjqnonce():
@@ -139,17 +138,19 @@ def jqsignAndjqnonce():
         'Sec-Fetch-User': '?1',
         'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
     }
-    head['User-Agent']=ua.random
-    res = requests.get(url,headers=head)
+    head['User-Agent'] = ua.random
+    res = requests.get(url, headers=head)
     cookie = res.cookies
     cookies_dict = requests.utils.dict_from_cookiejar(cookie)
     c = json2String(cookies_dict)
     headers['Cookie'] = c
-    headers['User-Agent']=head['User-Agent']
+    headers['User-Agent'] = head['User-Agent']
     # soup = BeautifulSoup(res.text, 'html.parser')
     # print(res.text)
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
     jqnonce = re.search("jqnonce=\".+\";", res.text).group(0)[9:-2]
+    print(rndnum)
+    print(jqnonce)
     soup = BeautifulSoup(res.text, 'html.parser')
     source = soup.find(attrs={'id': 'source'}).attrs['value']
     lis = []
@@ -267,7 +268,7 @@ def genertate_sentence():
         'cy4': 4,
         'cy5': 'null',
         'text': '',
-        'num': 4,
+        'num': 2,
         'token': token
 
     }
@@ -296,16 +297,20 @@ class GetIpThread(threading.Thread):
             lis.append(i + 1)
         global mutex
         while True:
-            apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
+            # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
             # 获取IP列表
+            apiUrl="http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=f9b35ab6c1f070b219134e717768bf09"
             res = requests.get(apiUrl, timeout=30)
-            content = json.loads(res.text, encoding='utf-8')['data']['data']
+            # content = json.loads(res.text, encoding='utf-8')['data']['data']
             # 按照\n分割获取到的IP
+
             mutex = 1
             ips.clear()
-
-            for item in content:
-                ips.append("{}:{}".format(item['ip'], item['port']))
+            items=res.text.split('\n')
+            for item in items:
+                ips.append(item.strip())
+            # for item in content:
+            #     ips.append("{}:{}".format(item['ip'], item['port']))
 
             mutex = 0
             print(ips)
@@ -373,8 +378,8 @@ def random_parameter():
     :return:
     '''
 
-
     url = " https://www.wjx.cn/joinnew/processjq.ashx?" + random_url(69541443)
+    print(url)
     parameter = ''
     for i in range(div_num):
 
@@ -396,12 +401,38 @@ def random_parameter():
 
             ss = '{}${}'.format(i + 1, pos_str) + '}'
         parameter += ss
-    parameter = 'submitdata='+parse.quote(parameter.rstrip('}'))
+    parameter = parse.quote(parameter.rstrip('}'))
+    data_s = {
+        'submitdata': parameter
+    }
     print(parameter)
     # print(url)
-    headers['User-Agent']=ua.random
-    index=random_num(0,len(ips)-1)
-    res = requests.post(url, headers=headers, data=parameter,proxies={'http':'http://{}'.format(ips[index])})
+    heee={
+  'Connection': 'keep-alive',
+  'Pragma': 'no-cache',
+  'Cache-Control': 'no-cache',
+  'Accept': 'text/plain, */*; q=0.01',
+  'Sec-Fetch-Dest': 'empty',
+  'X-Requested-With': 'XMLHttpRequest',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+  'Origin': 'https://www.wjx.cn',
+  'Sec-Fetch-Site': 'same-origin',
+  'Sec-Fetch-Mode': 'cors',
+  'Referer': 'https://www.wjx.cn/m/69541443.aspx',
+  'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+  'Cookie': 'acw_tc=2f624a3115861933050761611e33b571dd80434ca8f944e4b1f98cfcd4f598; .ASPXANONYMOUS=jT7bwMhC1gEkAAAAZTgzYTViNTMtYTBlZi00YzU5LThkZTYtODI2YTRlOWY3ZTdl_YZjKzSQl1rIe13zZjB3AWvG-tE1; UM_distinctid=171507d124f30d-0402fa4b188329-4313f6f-144000-171507d12502a2; CNZZDATA4478442=cnzz_eid%3D1767111020-1586188379-%26ntime%3D1586188379; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184676,1586184742,1586192780,1586220431; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586220431; join_69541443=1; crudat=2020-04-04 21:02:52; SojumpSurvey=0102A7D8987B8DDAD708FEA778AA02AFDAD70800076C00790068005F0067006F00640000012F00FFF83874F5A780B3F0152028DA0B65F5DB3A58F513; WjxUser=UserName=lyh_god; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586220561|1586220547; jpckey=%E5%8C%96%E5%A6%86',
+  'Content-Type': 'text/plain',
+  'Cookie': 'LastActivityJoin=69541443,105388013325; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1586222257|1586220547'
+}
+    # headers['User-Agent'] = ua.random
+    # index = random_num(0, len(ips) - 1)
+    # https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020-04-07%2009%3A30%3A36&source=directphone&submittype=1&ktimes=237&hlv=1&rn=2027509232.19314722&jpm=2&t=1586223056033&jqnonce=6dbf66f4-9a9c-449f-b646-f61e36faf41e&jqsign=1cea11a3*>f>d*33>a*e131*a16b41afa36
+
+    res = requests.post(
+        url,
+         data=data_s)  # proxies={'http':'http://{}'.format(ips[index])}
+    print(headers)
     print(res.text)
     print(res.status_code)
     return
@@ -416,10 +447,12 @@ if __name__ == '__main__':
     #
     # print(h)
 
-    GetIpThread(10).start()
+    GetIpThread(20).start()
 
-    time.sleep(2)
-    print(random_parameter())
+    # time.sleep(5)
+
+
+    # print(random_parameter())
     print()
 
     # h={1,2,3,5,7,9,1334}
