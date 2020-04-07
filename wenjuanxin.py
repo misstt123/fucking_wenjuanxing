@@ -29,21 +29,22 @@ headers = {
 }
 '''
 headers = {
-    'Connection': 'keep-alive',
-    'Pragma': 'no-cache',
-    'Cache-Control': 'no-cache',
-    'Accept': 'text/plain, */*; q=0.01',
-    'Sec-Fetch-Dest': 'empty',
-    'X-Requested-With': 'XMLHttpRequest',
-    # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Origin': 'https://www.wjx.cn',
-    'Sec-Fetch-Site': 'same-origin',
-    'Sec-Fetch-Mode': 'cors',
-    'Referer': 'https://www.wjx.cn/m/69541443.aspx',
-    'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-    # 'Cookie': 'acw_tc=707c9fd015861022902862957e5a12c8cfc985fc911ba2e6507fb7335474c3; .ASPXANONYMOUS=J3yj1_RB1gEkAAAAZWJkZmQwODItNzcwMy00NjZkLTliZTQtMGY1MThmZjMyYThm9f0vRsZ_HsxWyDjfkoiyf5WhNsU1; UM_distinctid=1714b10484e55-0ff6d4825411f7-4313f6f-144000-1714b10484f19d; jaward105375985068=1; SojumpABX_4563=1; award_69541443=1; jac69541443=35049556; join_69541443=1; CNZZDATA4478442=cnzz_eid%3D1132456625-1586101979-%26ntime%3D1586182979; crudat=2020-04-04 21:02:52; SojumpSurvey=0102AF1EFD8C39DAD708FEAFBE0E145BDAD70800076C00790068005F0067006F00640000012F00FF6E6B9B1D0BE3472D9E0FC237FDC4D08842BCF815; WjxUser=UserName=lyh_god; LastCheckUpdateDate=1; spiderregkey=baidu.com%c2%a7%e9%97%ae%e5%8d%b7%e6%98%9f%c2%a71; baidutgkey=%u95EE%u5377%u661F%u54C1%u4E13%u6807%u9898%7C4%7Cbaidu; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586076438,1586184498,1586184676,1586184742; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586185264797; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586185298; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586185297|1586183192; jpckey=%E5%8C%96%E5%A6%86',
-    'Content-Type': 'text/plain'
+  # 'Connection': 'keep-alive',
+  'Pragma': 'no-cache',
+  'Cache-Control': 'no-cache',
+  'Accept': 'text/plain, */*; q=0.01',
+  'Sec-Fetch-Dest': 'empty',
+  'X-Requested-With': 'XMLHttpRequest',
+  # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+  'Origin': 'https://www.wjx.cn',
+  'Sec-Fetch-Site': 'same-origin',
+  'Sec-Fetch-Mode': 'cors',
+  'Referer': 'https://www.wjx.cn/m/69541443.aspx',
+  'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+  # 'Cookie': 'acw_tc=2f624a6715862234817474764e34fe904cff90c9618e52b954393be92b1e1b; .ASPXANONYMOUS=53FmAw9D1gEkAAAAZjViNTMyZjgtYWQ1YS00YjJiLWJiODQtZjNhYTdlMGIzNmM4sPimJDlFh8s-f5J4XQSsiq83Wms1; UM_distinctid=17152498a1eb-03dcbb5842fbcf-4313f6f-144000-17152498a1f1ce; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184676,1586184742,1586192780,1586220431; jac69541443=49434414; SERVERID=0f3eb8fcde19feef85b46d49c555413b|1586270200|1586270200; CNZZDATA4478442=cnzz_eid%3D293256310-1586220780-%26ntime%3D1586269380; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586270201; jpckey=%E5%8C%96%E5%A6%86',
+  'Content-Type': 'text/plain',
+  # 'Cookie': 'acw_tc=2f624a7715862250966568261e7ac176004fc2b35b0e49cfdd5d8e1c619bf4; .ASPXANONYMOUS=Z-HixRJD1gEkAAAAMmJiMGQyYzQtNjkxNS00OTE2LTgxNDgtMDg2MDQ3YTdmZTdij9Q5ZCO0wtuHW_DgxVbWy1xvSog1; jac69541443=22855882; LastActivityJoin=69541443,105404040933; SERVERID=0f3eb8fcde19feef85b46d49c555413b|1586269859|1586269859'
 }
 
 
@@ -67,7 +68,7 @@ def current_time(a):
     返回当前时间
     :return:
     '''
-    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - a))
+    return time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(time.time() - a))
 
 
 def random_num(min, max):
@@ -96,7 +97,8 @@ def random_url(curid):
         jqnonce: 61a28b7e-460b-4762-8b49-783d09ec1e09
         jqsign: 70`39c6d,571c,5673,9c58,692e18db0d18
     '''
-    starttime = current_time(random_num(10, 50))
+    starttime = current_time(random_num(10, 45))
+    print("starttime="+starttime)
     now_time = time.time()
     t = int(now_time * 1000)
 
@@ -299,14 +301,14 @@ class GetIpThread(threading.Thread):
         while True:
             # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
             # 获取IP列表
-            apiUrl="http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=f9b35ab6c1f070b219134e717768bf09"
+            apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=f9b35ab6c1f070b219134e717768bf09"
             res = requests.get(apiUrl, timeout=30)
             # content = json.loads(res.text, encoding='utf-8')['data']['data']
             # 按照\n分割获取到的IP
 
             mutex = 1
             ips.clear()
-            items=res.text.split('\n')
+            items = res.text.strip().split('\n')
             for item in items:
                 ips.append(item.strip())
             # for item in content:
@@ -407,31 +409,51 @@ def random_parameter():
     }
     print(parameter)
     # print(url)
-    heee={
-  'Connection': 'keep-alive',
-  'Pragma': 'no-cache',
-  'Cache-Control': 'no-cache',
-  'Accept': 'text/plain, */*; q=0.01',
-  'Sec-Fetch-Dest': 'empty',
-  'X-Requested-With': 'XMLHttpRequest',
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-  'Origin': 'https://www.wjx.cn',
-  'Sec-Fetch-Site': 'same-origin',
-  'Sec-Fetch-Mode': 'cors',
-  'Referer': 'https://www.wjx.cn/m/69541443.aspx',
-  'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-  'Cookie': 'acw_tc=2f624a3115861933050761611e33b571dd80434ca8f944e4b1f98cfcd4f598; .ASPXANONYMOUS=jT7bwMhC1gEkAAAAZTgzYTViNTMtYTBlZi00YzU5LThkZTYtODI2YTRlOWY3ZTdl_YZjKzSQl1rIe13zZjB3AWvG-tE1; UM_distinctid=171507d124f30d-0402fa4b188329-4313f6f-144000-171507d12502a2; CNZZDATA4478442=cnzz_eid%3D1767111020-1586188379-%26ntime%3D1586188379; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184676,1586184742,1586192780,1586220431; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586220431; join_69541443=1; crudat=2020-04-04 21:02:52; SojumpSurvey=0102A7D8987B8DDAD708FEA778AA02AFDAD70800076C00790068005F0067006F00640000012F00FFF83874F5A780B3F0152028DA0B65F5DB3A58F513; WjxUser=UserName=lyh_god; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586220561|1586220547; jpckey=%E5%8C%96%E5%A6%86',
-  'Content-Type': 'text/plain',
-  'Cookie': 'LastActivityJoin=69541443,105388013325; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1586222257|1586220547'
-}
+    heee = {
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+        'Accept': 'text/plain, */*; q=0.01',
+        'Sec-Fetch-Dest': 'empty',
+        'X-Requested-With': 'XMLHttpRequest',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Origin': 'https://www.wjx.cn',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-Mode': 'cors',
+        'Referer': 'https://www.wjx.cn/m/69541443.aspx',
+        'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+        'Cookie': 'acw_tc=2f624a3115861933050761611e33b571dd80434ca8f944e4b1f98cfcd4f598; .ASPXANONYMOUS=jT7bwMhC1gEkAAAAZTgzYTViNTMtYTBlZi00YzU5LThkZTYtODI2YTRlOWY3ZTdl_YZjKzSQl1rIe13zZjB3AWvG-tE1; UM_distinctid=171507d124f30d-0402fa4b188329-4313f6f-144000-171507d12502a2; CNZZDATA4478442=cnzz_eid%3D1767111020-1586188379-%26ntime%3D1586188379; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184676,1586184742,1586192780,1586220431; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586220431; join_69541443=1; crudat=2020-04-04 21:02:52; SojumpSurvey=0102A7D8987B8DDAD708FEA778AA02AFDAD70800076C00790068005F0067006F00640000012F00FFF83874F5A780B3F0152028DA0B65F5DB3A58F513; WjxUser=UserName=lyh_god; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586220561|1586220547; jpckey=%E5%8C%96%E5%A6%86',
+        'Content-Type': 'text/plain',
+        'Cookie': 'LastActivityJoin=69541443,105388013325; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1586222257|1586220547'
+    }
     # headers['User-Agent'] = ua.random
     # index = random_num(0, len(ips) - 1)
     # https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020-04-07%2009%3A30%3A36&source=directphone&submittype=1&ktimes=237&hlv=1&rn=2027509232.19314722&jpm=2&t=1586223056033&jqnonce=6dbf66f4-9a9c-449f-b646-f61e36faf41e&jqsign=1cea11a3*>f>d*33>a*e131*a16b41afa36
 
+    # 代理服务器
+    proxyHost = "http-dyn.abuyun.com"
+    proxyPort = "9020"
+
+    # 代理隧道验证信息
+    proxyUser = "HNC36064U98618ND"
+    proxyPass = "279E10A0B0AB2457"
+
+    proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
+        "host": proxyHost,
+        "port": proxyPort,
+        "user": proxyUser,
+        "pass": proxyPass,
+    }
+
+    proxies = {
+        "http": proxyMeta,
+        "https": proxyMeta,
+    }
+
+    # resp = requests.get(targetUrl, proxies=proxies)
     res = requests.post(
-        url,
-         data=data_s)  # proxies={'http':'http://{}'.format(ips[index])}
+        url,data=data_s,headers=headers)  # proxies={'http':'http://{}'.format(ips[index])}
     print(headers)
     print(res.text)
     print(res.status_code)
@@ -447,12 +469,13 @@ if __name__ == '__main__':
     #
     # print(h)
 
-    GetIpThread(20).start()
-
+    # GetIpThread(20).start()
+    # for i in range(30):
+    #     headers['User-Agent']=ua.random
+    #     print(headers)
     # time.sleep(5)
 
-
-    # print(random_parameter())
+    random_parameter()
     print()
 
     # h={1,2,3,5,7,9,1334}
