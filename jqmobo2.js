@@ -796,7 +796,7 @@ function loadAnswer(a) {
             isLoadingAnswer = !1
     }
 }
-
+//需要提示
 function needTip() {
     if (window.divTip && "" == divTip.style.display) {
         $("img", divTip)[0] && (divTip.style.background = "none",
@@ -808,6 +808,7 @@ function needTip() {
     return !1
 }
 
+//加载上次提交答案
 function checkAnswer() {
     var a, b, c;
     window.localStorage && (a = window.isSingleVote && window.isMultipleChoice && !window.touPiaoItemIndex,
@@ -1077,7 +1078,10 @@ function validate(a) {
                 c = setTimeout(g, b)
         }
     }
-
+//b:true
+//    useAliVerify:1代表使用验证
+//     if (window.useAliVerify)
+//         loadSmartCaptcha();
     var c, e, b = !0;
     return firstError = null,
         firstMatrixError = null,
@@ -1633,6 +1637,8 @@ function debugLog(a) {
     window.debug && window.debug.log && debug.log(a)
 }
 
+
+//提交函数
 function groupAnswer(a) {
     var f, g, h, i, j, k, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, B, E, F, G, H, I, J, K, b = new Array, c = 0,
         d = new Object, e = 1;
@@ -2247,6 +2253,7 @@ function clearFieldValue(a) {
 }
 
 function validateQ(a) {
+    //b:req c:type
     var h, i, j, k, l, m, n, o, p, q, r, s, b = $(a).attr("req"), c = $(a).attr("type"), d = !0, e = $(a)[0], f = "";
     if ($(a).attr("hasjump"),
     "1" == c)
@@ -4817,6 +4824,8 @@ window.reachMaxCheatCount = !1,
             var a, b;
             if (debugLog("准备提交答卷"),
                 !this.disabled) {
+
+                //IsPar 预览状态
                 if (window.IsPar)
                     return a = window.parent.document.getElementById("skin-peeler-panel"),
                     a && (a.style.display = "none"),
@@ -4824,12 +4833,16 @@ window.reachMaxCheatCount = !1,
                             a && (a.style.display = "block")
                         }),
                         void 0;
+                    //needTip() 是否需要提示
                 if (needTip())
                     return alertNew($(divTip).text()),
                         void 0;
+
                 if ($("#action").val("1"),
                     debugLog("验证提交数据"),
-                    b = validate($(this).parent())) {
+                    b = validate($(this).parent()))
+                //验证数据格式正确
+                {
                     if ((!window.isSingleVote || window.isMultipleChoice) && $("html, body").animate({
                         scrollTop: $(document).height()
                     }, 600),
@@ -4838,7 +4851,10 @@ window.reachMaxCheatCount = !1,
                         if (!isCaptchaValid)
                             return !window.isSingleVote || window.isMultipleChoice && !window.touPiaoItemIndex ? $("#captcha").fadeIn("fast") : window.isMultipleChoice && window.ftppar ? voteMul(!0) : window.touPiaoItemIndex && !window.isMultipleChoice ? voteSin(!0) : voteData(),
                                 void 0
-                    } else if (window.isSingleVote && (!window.isMultipleChoice || window.touPiaoItemIndex)) {
+                    }
+
+
+                    else if (window.isSingleVote && (!window.isMultipleChoice || window.touPiaoItemIndex)) {
                         if (window.isMultipleChoice && window.ftppar)
                             return voteMul(),
                                 void 0;
@@ -4851,6 +4867,11 @@ window.reachMaxCheatCount = !1,
                 }
             }
         }),
+
+
+
+
+
             initSlider(),
             matrixFixedTitle(),
             totalPage > 1 ? ($("#divSubmit").hide(),

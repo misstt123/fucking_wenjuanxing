@@ -151,6 +151,9 @@ def jqsignAndjqnonce():
     # print(res.text)
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
     jqnonce = re.search("jqnonce=\".+\";", res.text).group(0)[9:-2]
+    useAliVerify = re.search("var useAliVerify=\d;", res.text).group(0)
+    print(useAliVerify[17])
+
     print(rndnum)
     print(jqnonce)
     soup = BeautifulSoup(res.text, 'html.parser')
@@ -478,7 +481,8 @@ if __name__ == '__main__':
     #     print(headers)
     # time.sleep(5)
 
-    random_parameter()
+    # random_parameter()
+    random_url(69541443)
     print()
 
     # h={1,2,3,5,7,9,1334}
