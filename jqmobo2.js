@@ -2523,7 +2523,8 @@ function to_next_page() {
         timeLimit()),
         fixBottom(),
         $("#divMatrixHeader").hide(),
-        adjustVideoHeight(pageHolder[cur_page])
+        adjustVideoHeight(pageHolder[cur_page]),
+        initDescImg()
 }
 
 function processSearch() {
@@ -3644,54 +3645,12 @@ function CheckMax(a, b) {
 }
 
 function elagerImg(a, b, c) {
-    var d, e, f, g, h, i, j, k;
     a = a || window.event,
     a.stopPropagation && a.stopPropagation(),
-    c || (c = $(b).parent().attr("pimg"),
-    c || (c = $(b).parent().find("img").attr("src"))),
-        d = "#outdiv",
-        e = "#indiv",
-        f = "#bigimg",
-        g = "#preView_wrap",
-        h = d,
-        i = document.documentElement.clientWidth || document.body.clientWidth,
-        j = document.documentElement.clientHeight || document.body.clientHeight,
-        k = $(document).scrollTop(),
-        $(f).unbind("load"),
-        $(f).attr("src", c).load(function () {
-            var l, m, a = this.width, b = this.height, c = a / b;
-            h = b > j ? ".icon_close" : d,
-                $(g).addClass("flex"),
-                a > i ? (l = "2%",
-                    b = i / c,
-                    a = .96 * i,
-                    m = (j - b) / 2,
-                0 > m && (m = 10,
-                    $(g).removeClass("flex"),
-                    b = .96 * j)) : (.8 * i > a && (a = .8 * i),
-                .4 * j > b && (b = .4 * j),
-                    l = (i - a) / 2,
-                    m = (j - b) / 2,
-                0 > m && (b = .96 * j,
-                    m = "2%",
-                    $(g).removeClass("flex"))),
-                $(e).css({
-                    left: l,
-                    top: m
-                }),
-                $(g).css({
-                    width: a,
-                    height: b
-                }),
-                $(d).fadeIn("fast"),
-                $("body").addClass("noscorrl"),
-                $(h).click(function () {
-                    $(d).fadeOut("fast"),
-                        $("body").removeClass("noscorrl"),
-                        $(document).scrollTop(k),
-                        $(f).attr("src", ""),
-                        $(h).unbind("click")
-                })
+    c || (c = $(b).parent().find("img").attr("src")),
+        previewImage.start({
+            close: !0,
+            current: c
         })
 }
 
@@ -3920,6 +3879,43 @@ function locationReplace(a) {
         }
     else
         location.replace(a)
+}
+
+function initDescImg() {
+    if (window.needEnlargeImg) {
+        if (pageHolder[cur_page]) {
+            if (pageHolder[cur_page].initDescImg)
+                return;
+            pageHolder[cur_page].initDescImg = !0
+        }
+        $(pageHolder[cur_page]).find(".div_item_desc img").each(function (a, b) {
+            if (0 == $(b).width()) {
+                var c = document.createElement("img");
+                c.onload = function () {
+                    this.width > 100 && ($(b).wrap("<div style='position: relative;display:inline-block;' class='descImgBox'></div>"),
+                        $(b).before($('<i class="icon_lookBigpic" onclick="elagerImg(event, this);"></i>')))
+                }
+                    ,
+                    c.src = b.src
+            } else
+                $(b).width() > 100 && ($(b).wrap("<div style='position: relative;display:inline-block;' class='descImgBox'></div>"),
+                    $(b).before($('<i class="icon_lookBigpic" onclick="elagerImg(event, this);"></i>')))
+        })
+    }
+}
+
+function enlargeImg() {
+    initDescImg(),
+        $("#divQuestion img,#divDesc img,#divVote img").click(function () {
+            if (!$(this).parent().hasClass("imgBox") && !$(this).parent().hasClass("descImgBox") && $(this).width() > 50) {
+                var a = this.src;
+                previewImage.start({
+                    close: !0,
+                    current: a
+                })
+            }
+        }),
+        $(".div_item_desc img,.shop-des img,.popimg img").unbind("click")
 }
 
 var spChars, spToChars, prevInputControl, isLoadingAnswer, lastCostTime, hasClickQ, needGoOut, hasShowTip, keywordarray,
@@ -4817,7 +4813,6 @@ window.reachMaxCheatCount = !1,
             for (e = pageHolder[A].questions,
                      g = 0; g < e.length; g++)
                 checkPeiE($(e[g]));
-
         if (null != $("#ctlNext") && $("#ctlNext").on("click", function () {
             var a, b;
             if (debugLog("准备提交答卷"),

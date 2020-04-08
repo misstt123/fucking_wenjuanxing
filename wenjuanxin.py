@@ -42,9 +42,9 @@ headers = {
   'Sec-Fetch-Mode': 'cors',
   'Referer': 'https://www.wjx.cn/m/69541443.aspx',
   'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-  # 'Cookie': 'acw_tc=2f624a6715862234817474764e34fe904cff90c9618e52b954393be92b1e1b; .ASPXANONYMOUS=53FmAw9D1gEkAAAAZjViNTMyZjgtYWQ1YS00YjJiLWJiODQtZjNhYTdlMGIzNmM4sPimJDlFh8s-f5J4XQSsiq83Wms1; UM_distinctid=17152498a1eb-03dcbb5842fbcf-4313f6f-144000-17152498a1f1ce; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184676,1586184742,1586192780,1586220431; jac69541443=49434414; SERVERID=0f3eb8fcde19feef85b46d49c555413b|1586270200|1586270200; CNZZDATA4478442=cnzz_eid%3D293256310-1586220780-%26ntime%3D1586269380; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586270201; jpckey=%E5%8C%96%E5%A6%86',
+  # 'Cookie': 'acw_tc=2f624a6715862234817474764e34fe904cff90c9618e52b954393be92b1e1b; .ASPXANONYMOUS=53FmAw9D1gEkAAAAZjViNTMyZjgtYWQ1YS00YjJiLWJiODQtZjNhYTdlMGIzNmM4sPimJDlFh8s-f5J4XQSsiq83Wms1; UM_distinctid=17152498a1eb-03dcbb5842fbcf-4313f6f-144000-17152498a1f1ce; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184742,1586192780,1586220431,1586271053; crudat=2020-04-04 21:02:52; WjxUser=UserName=lyh_god; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586271060684; SojumpSurvey=0102A6A2B4F313DBD708FEA642C67A35DBD70800076C00790068005F0067006F00640000012F00FF28407EB2DC91E35CC31E6D4FE3C9918963C6B8D2; jpckey=%E5%8C%96%E5%A6%86; jac69541443=00021182; CNZZDATA4478442=cnzz_eid%3D293256310-1586220780-%26ntime%3D1586328780; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586332067; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586332066|1586330771',
   'Content-Type': 'text/plain',
-  # 'Cookie': 'acw_tc=2f624a7715862250966568261e7ac176004fc2b35b0e49cfdd5d8e1c619bf4; .ASPXANONYMOUS=Z-HixRJD1gEkAAAAMmJiMGQyYzQtNjkxNS00OTE2LTgxNDgtMDg2MDQ3YTdmZTdij9Q5ZCO0wtuHW_DgxVbWy1xvSog1; jac69541443=22855882; LastActivityJoin=69541443,105404040933; SERVERID=0f3eb8fcde19feef85b46d49c555413b|1586269859|1586269859'
+  # 'Cookie': 'acw_tc=2f624a7715862250966568261e7ac176004fc2b35b0e49cfdd5d8e1c619bf4; .ASPXANONYMOUS=Z-HixRJD1gEkAAAAMmJiMGQyYzQtNjkxNS00OTE2LTgxNDgtMDg2MDQ3YTdmZTdij9Q5ZCO0wtuHW_DgxVbWy1xvSog1; LastActivityJoin=69541443,105426626886; SERVERID=2a2dcf6de1f5b497e80dc0f7231b4801|1586348794|1586348794'
 }
 
 
@@ -380,7 +380,8 @@ def random_parameter():
     :return:
     '''
 
-    url = " https://www.wjx.cn/joinnew/processjq.ashx?" + random_url(69541443)
+    # url = " https://www.wjx.cn/joinnew/processjq.ashx?" + random_url(69541443)
+    url="https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020%2F4%2F7%2022%3A36%3A39&source=directphone&submittype=1&ktimes=200&hlv=1&rn=2027509232.49434414&jpm=2&t=1586270258764&jqnonce=3dd7ec42-b6cf-4260-bf97-eea9411ab084&jqsign=2ee6db53%2Cc7bg%2C5371%2Ccg86%2Cdd%608500%60c195"
     print(url)
     parameter = ''
     for i in range(div_num):
@@ -404,10 +405,11 @@ def random_parameter():
             ss = '{}${}'.format(i + 1, pos_str) + '}'
         parameter += ss
     parameter = parse.quote(parameter.rstrip('}'))
+    parameter="submitdata=1%241%7D2%243%7D3%243%7D4%242%7D5%241%7D6%243%7D7%242%7D8%242%7D9%242%7D10%242%7D11%242%7D12%244%7D13%24"
     data_s = {
         'submitdata': parameter
     }
-    print(parameter)
+    print(data_s)
     # print(url)
     heee = {
         'Connection': 'keep-alive',
@@ -447,14 +449,15 @@ def random_parameter():
     }
 
     proxies = {
-        "http": proxyMeta,
-        "https": proxyMeta,
+        "http": "117.26.88.205:29995",
+        "https": "117.26.88.205:29995"
     }
 
     # resp = requests.get(targetUrl, proxies=proxies)
-    res = requests.post(
-        url,data=data_s,headers=headers)  # proxies={'http':'http://{}'.format(ips[index])}
+    res = requests.request("POST",
+        url,data=parameter,headers=headers,proxies=proxies)  # proxies={'http':'http://{}'.format(ips[index])}
     print(headers)
+    print(res.url)
     print(res.text)
     print(res.status_code)
     return
