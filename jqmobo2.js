@@ -796,6 +796,7 @@ function loadAnswer(a) {
             isLoadingAnswer = !1
     }
 }
+
 //需要提示
 function needTip() {
     if (window.divTip && "" == divTip.style.display) {
@@ -1078,8 +1079,9 @@ function validate(a) {
                 c = setTimeout(g, b)
         }
     }
+
 //b:true
-//    useAliVerify:1代表使用验证
+//    useAliVerify:1代表使用阿里验证
 //     if (window.useAliVerify)
 //         loadSmartCaptcha();
     var c, e, b = !0;
@@ -1651,6 +1653,7 @@ function groupAnswer(a) {
                     i = $.trim(g.val()),
                 !i || i.length < 2 || (j = document.createElement("img"),
                     k = $("div.field-label", quResult[f]).text(),
+
                     j.src = "//sojump.cn-hangzhou.log.aliyuncs.com/logstores/activitynlp/track.gif?APIVersion=0.6.0&activity=" + activityId + "&title=" + encodeURIComponent(document.title) + "&qtitle=" + encodeURIComponent(k) + "&q=" + getTopic(quResult[f]) + "&text=" + encodeURIComponent(i) + "&jointimes=" + (window.currJT || 0));
             hasAutoSubmit = !0
         }
@@ -1696,14 +1699,18 @@ function groupAnswer(a) {
     for (b.sort(function (a, b) {
         return a._topic - b._topic
     }),
+             //spChars = ["$", "}", "^", "|", "!", "<"],
+             //1$1}2$2}3$2}4$2}5$2}6$2}7$2}8$2}9$1}10$2}11$4}12$1|3|4|5}13$vsdvddf
              n = "",
              f = 0; f < b.length; f++)
+
         f > 0 && (n += spChars[1]),
             n += b[f]._topic,
             n += spChars[0],
             n += b[f]._value;
     debugLog("获取提交参数");
     try {
+        //考试才会走这里
         if (window.isKaoShi && window.randomMode && d && window.localStorage && window.JSON) {
             if (o = localStorage.getItem("sortactivity"),
                 o ? o += "," + activityId : o = activityId,
@@ -1725,9 +1732,13 @@ function groupAnswer(a) {
         }
     } catch (l) {
     }
+
+
+    //v=https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443
     if (v = $("#form1").attr("action"),
     (v.indexOf("aliyun.wjx.cn") > -1 || v.indexOf("temp.wjx.cn") > -1) && (v = v.replace("aliyun.wjx.cn", window.location.host).replace("temp.wjx.cn", window.location.host)),
     0 == v.indexOf("http://") && "https:" == document.location.protocol && (v = v.replace("http://", "https://")),
+
         w = v + "&starttime=" + encodeURIComponent($("#starttime").val()),
         x = window.sojumpParm,
     window.hasEncode || (x = encodeURIComponent(x)),
@@ -1740,6 +1751,8 @@ function groupAnswer(a) {
     window.hasMaxtime && (w += "&hmt=1"),
     window.amt && (w += "&amt=" + amt),
     window.initMaxSurveyTime && (w += "&mst=" + window.initMaxSurveyTime),
+        //是否使用阿里验证
+        //nc_csessionid:sessionid
     window.useAliVerify && (w += "&nc_csessionid=" + encodeURIComponent(nc_csessionid) + "&nc_sig=" + encodeURIComponent(nc_sig) + "&nc_token=" + encodeURIComponent(nc_token) + "&nc_scene=" + nc_scene),
     verifymob && (w += "&verifymob=" + verifymob),
     window.cpid && (w += "&cpid=" + cpid),
@@ -1813,8 +1826,11 @@ function groupAnswer(a) {
         } catch (D) {
         }
     }
+
+
     window.shareGuid && (w += "&shareGuid=" + window.shareGuid),
         debugLog("准备提交到服务器"),
+
         $("#ctlNext").hide(),
         E = "处理中......",
         E = '<img src = "//image.wjx.com/images/wjxMobile/wait.gif" alt="">',
@@ -1824,15 +1840,19 @@ function groupAnswer(a) {
     1 == langVer && (E = "Validating......"),
         $("#ValError").html(E),
         $("#captchaTit").html(E)),
+        // spChars = ["$", "}", "^", "|", "!", "<"],
+        //clientAnswerSend:提交数据n：1$1}2$2}3$2}4$2}5$2}6$2}7$2}8$2}9$1}10$2}11$4}12$1|3|4|5}13$vsdvddf
         clientAnswerSend = n,
     window.jqnonce && (w += "&jqnonce=" + encodeURIComponent(window.jqnonce),
         F = dataenc(window.jqnonce),
         w += "&jqsign=" + encodeURIComponent(F)),
+
         G = {
             submitdata: n
         },
         H = !1,
         I = window.getMaxWidth || 1800,
+
         J = encodeURIComponent(n),
     window.submitWithGet && J.length <= I && (H = !0),
         debugLog("开始提交"),
@@ -1841,7 +1861,9 @@ function groupAnswer(a) {
         K = "很抱歉，网络连接异常，请重新尝试提交！",
     1 == langVer && (K = "Sorry,network error,please retry later."),
         window.postIframe ? (debugLog("postIframe"),
-            postWithIframe(w, n)) : H ? (debugLog("ajaxget"),
+            postWithIframe(w, n)) : H ?
+
+            (debugLog("ajaxget"),
             $.ajax({
                 type: "GET",
                 url: w,
@@ -1853,14 +1875,21 @@ function groupAnswer(a) {
                         $("#captchaTit").html(K),
                         $("#ctlNext").show()
                 }
-            })) : (debugLog("ajaxpost"),
+            })) :
+
+            //ajax的post请求，走这里
+            (debugLog("ajaxpost"),
             debugLog(w),
             debugLog(G),
+
             $.ajax({
                 type: "POST",
                 url: w,
                 data: G,
                 dataType: "text",
+
+
+                // 后置完成请求
                 success: function (b) {
                     afterSubmit(b, a)
                 },
@@ -1872,6 +1901,7 @@ function groupAnswer(a) {
                 }
             }))
 }
+
 
 function postWithIframe(a, b) {
     var d, c = document.createElement("div");
@@ -1945,6 +1975,7 @@ function needAdjustVideo() {
     return window.adjustVideo ? !0 : allQArray && allQArray.length <= 50 ? !0 : !1
 }
 
+//a，提交返回信息，b为1
 function afterSubmit(a, b) {
     var c, d, e, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, C;
     if ($("#ValError").html(""),
@@ -1952,10 +1983,19 @@ function afterSubmit(a, b) {
         havereturn = !0,
         debugLog("提交成功"),
         c = a.split("〒"),
+        //d：返回信息的第一部分 10,11
         d = c[0],
+        //e:返回信息的第二部分
         e = c[1] || "提交有误，错误代码：" + c[0],
     clientAnswerSend && 10 != d && 11 != d && 3 != b)
         try {
+        //function saveSubmitAnswer(a) {
+            //     window.localStorage && (localStorage.setItem("wjxtempanswer", a),
+            //         localStorage.setItem("wjxtempanswerid", activityId),
+            //         localStorage.setItem("wjxtempanswerdat", (new Date).getTime()),
+            //         localStorage.setItem("wjxfirstloadtime", fisrtLoadTime),
+            //         localStorage.setItem("wjxsavepage", cur_page))
+            // }
             saveSubmitAnswer(clientAnswerSend)
         } catch (f) {
         }
@@ -4006,10 +4046,13 @@ window.reachMaxCheatCount = !1,
     allQArray = null,
     shopArray = new Array,
     isCaptchaValid = !1,
+
     nc_csessionid = "",
     nc_sig = "",
     nc_token = ["FFFF00000000016770EE", (new Date).getTime(), Math.random()].join(":"),
+
     captchaOjb = null,
+
     hasPeiEFull = !1,
     $(function () {
         var a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, B, C, D, E, F, G, H, I, J,
@@ -4753,6 +4796,8 @@ window.reachMaxCheatCount = !1,
                         })),
                         void 0)
             }),
+
+
         j && addtoactivitystat(),
         window.totalCut && window.totalCut > 0)
             for (g = 0; g < window.totalCut; g++) {
@@ -4833,7 +4878,7 @@ window.reachMaxCheatCount = !1,
                             a && (a.style.display = "block")
                         }),
                         void 0;
-                    //needTip() 是否需要提示
+                //needTip() 是否需要提示
                 if (needTip())
                     return alertNew($(divTip).text()),
                         void 0;
@@ -4851,10 +4896,7 @@ window.reachMaxCheatCount = !1,
                         if (!isCaptchaValid)
                             return !window.isSingleVote || window.isMultipleChoice && !window.touPiaoItemIndex ? $("#captcha").fadeIn("fast") : window.isMultipleChoice && window.ftppar ? voteMul(!0) : window.touPiaoItemIndex && !window.isMultipleChoice ? voteSin(!0) : voteData(),
                                 void 0
-                    }
-
-
-                    else if (window.isSingleVote && (!window.isMultipleChoice || window.touPiaoItemIndex)) {
+                    } else if (window.isSingleVote && (!window.isMultipleChoice || window.touPiaoItemIndex)) {
                         if (window.isMultipleChoice && window.ftppar)
                             return voteMul(),
                                 void 0;
@@ -4867,9 +4909,6 @@ window.reachMaxCheatCount = !1,
                 }
             }
         }),
-
-
-
 
 
             initSlider(),

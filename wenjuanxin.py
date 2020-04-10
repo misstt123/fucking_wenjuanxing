@@ -16,35 +16,41 @@ ua = UserAgent()
 
 '''
 headers = {
-    # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0',
-    'Accept': 'text/plain, */*; q=0.01',
-    'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'X-Requested-With': 'XMLHttpRequest',
-    'Origin': 'https://www.wjx.cn',
     'Connection': 'keep-alive',
-    'Referer': 'https://www.wjx.cn/m/69156112.aspx',
-    # 'Cookie': 'acw_tc=2f624a4c15859126853877402e62d4a0ffe71fe04433f4f22a1f6fc25631a9; .ASPXANONYMOUS=ZNpKYjtA1gEkAAAAMjIyMzdhMWEtOWI4ZS00ZjZhLTllM2YtNDk2NTQxM2RiNGY2RrlH4oMvK38t4FPe1gv1zc2TWy81; jac69156112=09093637; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1585914035|1585912685; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1585912686; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1585914036; UM_distinctid=1713fc327b1155-075cd0241399148-4c302f7e-144000-1713fc327b2328; CNZZDATA4478442=cnzz_eid%3D732218403-1585910396-%26ntime%3D1585910396; jpckey=%E5%AD%A6%E5%8E%86; LastActivityJoin=69156112,105332268947; join_69156112=1',
-    'Content-Type': 'text/plain'
+    'Cache-Control': 'no-cache',
+    'Accept': 'text/plain, */*; q=0.01',
+    'Sec-Fetch-Dest': 'empty',
+    'X-Requested-With': 'XMLHttpRequest',
+    # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Origin': 'https://www.wjx.cn',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-Mode': 'cors',
+    'Referer': 'https://www.wjx.cn/m/69541443.aspx',
+    'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+    # 'Cookie': 'acw_tc=2f624a6715862234817474764e34fe904cff90c9618e52b954393be92b1e1b; .ASPXANONYMOUS=53FmAw9D1gEkAAAAZjViNTMyZjgtYWQ1YS00YjJiLWJiODQtZjNhYTdlMGIzNmM4sPimJDlFh8s-f5J4XQSsiq83Wms1; UM_distinctid=17152498a1eb-03dcbb5842fbcf-4313f6f-144000-17152498a1f1ce; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184742,1586192780,1586220431,1586271053; crudat=2020-04-04 21:02:52; WjxUser=UserName=lyh_god; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586271060684; SojumpSurvey=0102A6A2B4F313DBD708FEA642C67A35DBD70800076C00790068005F0067006F00640000012F00FF28407EB2DC91E35CC31E6D4FE3C9918963C6B8D2; jpckey=%E5%8C%96%E5%A6%86; jac69541443=00021182; CNZZDATA4478442=cnzz_eid%3D293256310-1586220780-%26ntime%3D1586328780; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586332067; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586332066|1586330771',
+    'Content-Type': 'text/plain',
+    # 'Cookie': 'acw_tc=2f624a7715862250966568261e7ac176004fc2b35b0e49cfdd5d8e1c619bf4; .ASPXANONYMOUS=Z-HixRJD1gEkAAAAMmJiMGQyYzQtNjkxNS00OTE2LTgxNDgtMDg2MDQ3YTdmZTdij9Q5ZCO0wtuHW_DgxVbWy1xvSog1; LastActivityJoin=69541443,105426626886; SERVERID=2a2dcf6de1f5b497e80dc0f7231b4801|1586348794|1586348794'
 }
 '''
+
 headers = {
-  # 'Connection': 'keep-alive',
-  'Pragma': 'no-cache',
-  'Cache-Control': 'no-cache',
-  'Accept': 'text/plain, */*; q=0.01',
-  'Sec-Fetch-Dest': 'empty',
-  'X-Requested-With': 'XMLHttpRequest',
-  # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-  'Origin': 'https://www.wjx.cn',
-  'Sec-Fetch-Site': 'same-origin',
-  'Sec-Fetch-Mode': 'cors',
-  'Referer': 'https://www.wjx.cn/m/69541443.aspx',
-  'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-  # 'Cookie': 'acw_tc=2f624a6715862234817474764e34fe904cff90c9618e52b954393be92b1e1b; .ASPXANONYMOUS=53FmAw9D1gEkAAAAZjViNTMyZjgtYWQ1YS00YjJiLWJiODQtZjNhYTdlMGIzNmM4sPimJDlFh8s-f5J4XQSsiq83Wms1; UM_distinctid=17152498a1eb-03dcbb5842fbcf-4313f6f-144000-17152498a1f1ce; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184742,1586192780,1586220431,1586271053; crudat=2020-04-04 21:02:52; WjxUser=UserName=lyh_god; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586271060684; SojumpSurvey=0102A6A2B4F313DBD708FEA642C67A35DBD70800076C00790068005F0067006F00640000012F00FF28407EB2DC91E35CC31E6D4FE3C9918963C6B8D2; jpckey=%E5%8C%96%E5%A6%86; jac69541443=00021182; CNZZDATA4478442=cnzz_eid%3D293256310-1586220780-%26ntime%3D1586328780; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586332067; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586332066|1586330771',
-  'Content-Type': 'text/plain',
-  # 'Cookie': 'acw_tc=2f624a7715862250966568261e7ac176004fc2b35b0e49cfdd5d8e1c619bf4; .ASPXANONYMOUS=Z-HixRJD1gEkAAAAMmJiMGQyYzQtNjkxNS00OTE2LTgxNDgtMDg2MDQ3YTdmZTdij9Q5ZCO0wtuHW_DgxVbWy1xvSog1; LastActivityJoin=69541443,105426626886; SERVERID=2a2dcf6de1f5b497e80dc0f7231b4801|1586348794|1586348794'
+    'Accept': 'text/plain, */*; q=0.01',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    # 'Cookie': r'jpckey=%E5%8C%96%E5%A6%86',
+    'Host': 'www.wjx.cn',
+    'Origin': 'https://www.wjx.cn',
+    'Pragma': 'no-cache',
+    'Referer': f'https://www.wjx.cn/m/69541443.aspx',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-origin',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36 Edg/80.0.361.69',
+    'X-Requested-With': 'XMLHttpRequest',
 }
 
 
@@ -78,7 +84,7 @@ def random_num(min, max):
     :param max:
     :return:
     '''
-    return random.randrange(min, max)
+    return random.uniform(min, max)
 
 
 def random_url(curid):
@@ -97,32 +103,58 @@ def random_url(curid):
         jqnonce: 61a28b7e-460b-4762-8b49-783d09ec1e09
         jqsign: 70`39c6d,571c,5673,9c58,692e18db0d18
     '''
-    starttime = current_time(random_num(10, 45))
-    print("starttime="+starttime)
-    now_time = time.time()
-    t = int(now_time * 1000)
 
+    # starttime = current_time(random_num(10, 45))
+    # print("starttime="+starttime)
+
+    lis = jqsignAndjqnonce()
     # 不知道有啥意义
     # source = 'directphone'
     # submittype = 1
 
     ktimes = random_num(110, 428) + 2
+    print("ktimes:" + str(ktimes))
     hlv = 1
-    lis = jqsignAndjqnonce()
+    # 此处测试用
+    # time.sleep(random_num(10, 45))
+    time.sleep(random_num(0.5,6))
+
     rn = lis[0]  # '2027509235.{}'.format(int(math.modf(now_time)[0] * 10000000))
     jpm = 2
     jqnonce = lis[1]
+    # print(jqnonce)
     source = lis[2]
     jqsign = dataenc(jqnonce, ktimes)
-    print(jqsign)
+    # print(jqsign)
+    now_time = time.time()
+    t = int(now_time * 1000)
+    # print("t=" + str(t))
+
+    starttime = lis[3].strip()
+    # print("starttime: " + str(starttime))
+    # print(jqsign)
     '''
     curid=69541443&starttime=2020%2F4%2F4%2023%3A21%3A24&source=directphone&submittype=1&ktimes=123&hlv=1&rn=2027509235.94422000&jpm=2&t=1586013796384&jqnonce=08ddd9f8-69c1-4900-9e9e-dc211a32989e&jqsign=3%3Bggg%3Ae%3B.5%3A%602.7%3A33.%3Af%3Af.g%60122b01%3A%3B%3Af
     '''
-    str = "curid={}&starttime={}&source={}&submittype=1&ktimes={}&hlv={}&rn={}&jpm={}&t={}&jqnonce={}&jqsign={}".format(
+    params = {
+        "curid": str(curid),
+        "starttime": starttime,
+        "source": source,
+        "submittype": 1,
+        "ktimes": ktimes,
+        "hlv": hlv,
+        "rn": rn,
+        "jpm": jpm,
+        "t": t,
+        "jqnonce": jqnonce,
+        "jqsign": jqsign
+    }
+    '''
+    url = "curid={}&starttime={}&source={}&submittype=1&ktimes={}&hlv={}&rn={}&jpm={}&t={}&jqnonce={}&jqsign={}".format(
         curid, parse.quote(starttime).upper(), source, ktimes, hlv, rn, jpm, t, jqnonce, jqsign
     )
-
-    return str
+    '''
+    return params
 
 
 def jqsignAndjqnonce():
@@ -152,16 +184,20 @@ def jqsignAndjqnonce():
     rndnum = re.search("rndnum=\".+\";", res.text).group(0)[8:-2]
     jqnonce = re.search("jqnonce=\".+\";", res.text).group(0)[9:-2]
     useAliVerify = re.search("var useAliVerify=\d;", res.text).group(0)
-    print(useAliVerify[17])
 
-    print(rndnum)
-    print(jqnonce)
+    # print("useAliVerify:" + str(useAliVerify[17]))
+    #
+    # print("rndnum:" + str(rndnum))
+    # print("jqnonce:" + str(jqnonce))
     soup = BeautifulSoup(res.text, 'html.parser')
+    r_starttime = soup.find(attrs={'id': 'starttime'}).attrs['value']
+    # print("starttime:"+str(r_starttime).strip())
     source = soup.find(attrs={'id': 'source'}).attrs['value']
     lis = []
     lis.append(rndnum)
     lis.append(jqnonce)
     lis.append(source)
+    lis.append(r_starttime)
     return lis
 
 
@@ -181,7 +217,7 @@ def dataenc(jqnonce, ktimes):
     jq_lis = list(jqnonce)
     if (b == 0):
         b = 1
-    for d in range(len(list(jq_lis)) - 1):
+    for d in range(len(list(jq_lis))):
         temp = ord(jq_lis[d]) ^ b
         c += (chr(temp))
 
@@ -376,17 +412,20 @@ for item in div:
     type_lis.append(dic_item)
 
 
-def random_parameter():
+def post_url():
     '''
     生成1$1}2$2}3$3}4$1}5$3}6$2}7$2}8$2}9$2}10$2}11$1}12$1}13$
        1$2} 2$2}3$1}4$3}5$3}6$3}7$3}8$2}9$2}10$2}11$4}12$1|2|3|4|5}13$
     :return:
     '''
 
-    # url = " https://www.wjx.cn/joinnew/processjq.ashx?" + random_url(69541443)
-    url="https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020%2F4%2F7%2022%3A36%3A39&source=directphone&submittype=1&ktimes=200&hlv=1&rn=2027509232.49434414&jpm=2&t=1586270258764&jqnonce=3dd7ec42-b6cf-4260-bf97-eea9411ab084&jqsign=2ee6db53%2Cc7bg%2C5371%2Ccg86%2Cdd%608500%60c195"
+    url = "https://www.wjx.cn/joinnew/processjq.ashx"
+    # url="https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020%2F4%2F8%2015%3A47%3A45&source=directphone&submittype=1&ktimes=61&hlv=1&rn=2027509209.00021182&jpm=2&lct=10097&t=1586332080065&jqnonce=066217aa-9371-432d-862c-2bbec0bb5c38&jqsign=177306%60%60%2C8260%2C523e%2C973b%2C3ccdb1cc4b29"
+
+    params = random_url(69541443)
+
     print(url)
-    parameter = ''
+    data = ''
     for i in range(div_num):
 
         if (type_lis[i]['type'] == '1'):
@@ -406,14 +445,16 @@ def random_parameter():
             # print(pos_str)
 
             ss = '{}${}'.format(i + 1, pos_str) + '}'
-        parameter += ss
-    parameter = parse.quote(parameter.rstrip('}'))
-    parameter="submitdata=1%241%7D2%243%7D3%243%7D4%242%7D5%241%7D6%243%7D7%242%7D8%242%7D9%242%7D10%242%7D11%242%7D12%244%7D13%24"
+        data += ss
+    # parameter = parse.quote(parameter.rstrip('}'))
+    data = data.rstrip('}')
+    # parameter="submitdata=1%241%7D2%243%7D3%243%7D4%242%7D5%241%7D6%243%7D7%242%7D8%242%7D9%242%7D10%242%7D11%242%7D12%244%7D13%24"
     data_s = {
-        'submitdata': parameter
+        "submitdata": data
     }
     print(data_s)
     # print(url)
+    '''
     heee = {
         'Connection': 'keep-alive',
         'Pragma': 'no-cache',
@@ -432,6 +473,7 @@ def random_parameter():
         'Content-Type': 'text/plain',
         'Cookie': 'LastActivityJoin=69541443,105388013325; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1586222257|1586220547'
     }
+    '''
     # headers['User-Agent'] = ua.random
     # index = random_num(0, len(ips) - 1)
     # https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020-04-07%2009%3A30%3A36&source=directphone&submittype=1&ktimes=237&hlv=1&rn=2027509232.19314722&jpm=2&t=1586223056033&jqnonce=6dbf66f4-9a9c-449f-b646-f61e36faf41e&jqsign=1cea11a3*>f>d*33>a*e131*a16b41afa36
@@ -452,17 +494,25 @@ def random_parameter():
     }
 
     proxies = {
-        "http": "117.26.88.205:29995",
-        "https": "117.26.88.205:29995"
+        "https": "182.247.60.216:52142",
+        "http": "182.247.60.216:52142"
     }
-
+    print(str(params))
     # resp = requests.get(targetUrl, proxies=proxies)
-    res = requests.request("POST",
-        url,data=parameter,headers=headers,proxies=proxies)  # proxies={'http':'http://{}'.format(ips[index])}
-    print(headers)
-    print(res.url)
+    try:
+        res = requests.post(
+            url, headers=headers, data=data_s, params=params,
+            proxies=proxies)
+    except:
+        pass
+    # proxies={'http':'http://{}'.format(ips[index])}
+    # print(headers)
+    # print(res.url)
+
+    # print(res.history)
+
     print(res.text)
-    print(res.status_code)
+    # print(res.status_code)
     return
 
 
@@ -481,8 +531,10 @@ if __name__ == '__main__':
     #     print(headers)
     # time.sleep(5)
 
-    # random_parameter()
-    random_url(69541443)
+    post_url()
+    # 2020/4/9 21:45:48
+    # random_url(69541443)
+    # print(dataenc("db75d87c-ad72-42db-b00f-271d2a94bd6d", 167))
     print()
 
     # h={1,2,3,5,7,9,1334}
