@@ -1,6 +1,7 @@
 from fake_useragent.fake import UserAgent
 import requests
 import random
+import sys
 from faker import Factory
 import time
 import math
@@ -11,6 +12,8 @@ import threading
 import json
 import jieba.analyse
 from urllib.parse import urlencode
+from threading import Thread  # 导入线程函数
+import threading;
 
 ua = UserAgent()
 
@@ -128,7 +131,7 @@ def random_url(curid):
     # submittype = 1
 
     ktimes = random_num(110, 428) + 2
-    print("ktimes:" + str(ktimes))
+    # print("ktimes:" + str(ktimes))
     hlv = 1
     # 此处测试用
     # time.sleep(random_num(10, 45))
@@ -339,8 +342,37 @@ def genertate_sentence():
 
 
 ips = []  # ip列表
-
 mutex = 0  # 标志位
+use_count=0  #ip使用量
+def update_ips():
+    global  ips
+    lis = []
+    for i in range(3):
+        lis.append(i + 1)
+    global mutex
+
+    # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
+    # 获取IP列表
+    apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=8e497788b881ad1c19ff7521990b6bd3"
+    res = requests.get(apiUrl, timeout=30)
+    # content = json.loads(res.text, encoding='utf-8')['data']['data']
+    # 按照\n分割获取到的IP
+    res_text=res.text.strip()
+    if( "fdfgdf" in res_text):
+        notice_wechat("ip量用完了","{} 总数为：{}".format(current_time(0),use_count))
+        sys.exit(0)
+    elif("订单过期" in res_text):
+        notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0),use_count))
+        sys.exit(0)
+    mutex = 1
+    ips.clear()
+    items = res_text.split('\n')
+    for item in items:
+        ips.append(item.strip())
+        # for item in content:
+        #     ips.append("{}:{}".format(item['ip'], item['port']))
+    mutex = 0
+    print(ips)
 
 
 class GetIpThread(threading.Thread):
@@ -356,7 +388,7 @@ class GetIpThread(threading.Thread):
         while True:
             # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
             # 获取IP列表
-            apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=f9b35ab6c1f070b219134e717768bf09"
+            apiUrl ="http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=8e497788b881ad1c19ff7521990b6bd3"
             res = requests.get(apiUrl, timeout=30)
             # content = json.loads(res.text, encoding='utf-8')['data']['data']
             # 按照\n分割获取到的IP
@@ -454,7 +486,7 @@ def post_url(curid):
     }
     global mutex
     i = -1
-    while(mutex==0 and i<0):
+    while(mutex==0 and len(ips)>0):
         mutex=1
         i = random_num(0, len(ips) - 1)
         ip=ips[i]
@@ -469,7 +501,7 @@ def post_url(curid):
 
         params = random_url(curid)
 
-        print(url)
+        # print(url)
         data = ''
         for i in range(div_num):
 
@@ -497,8 +529,8 @@ def post_url(curid):
         data_s = {
             "submitdata": data
         }
-        print(data_s)
-        print(str(params))
+        # print(data_s)
+        # print(str(params))
         # print(url)
         '''
         heee = {
@@ -528,14 +560,28 @@ def post_url(curid):
             res = requests.post(
                 url, headers=headers, data=data_s, params=params,
                 proxies=proxies)
-            print(res.text)
-        except Exception as e:
-            notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
+            message=res.text
+            status_code=message.split('〒')[0]
+            # print(status_code)
+            if(int(status_code)!=10):
+                break
+
+            print(message)
+        except:
+            # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
             break
         finally:
-            time.sleep(random.uniform(0.5, 4.9))
+            time.sleep(random.uniform(0.5, 2))
 
     return
+
+
+def multi_thread(curid):
+    try:
+        while(1):
+            post_url(curid)
+    except Exception as e:
+        notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
 
 
 if __name__ == '__main__':
@@ -551,15 +597,23 @@ if __name__ == '__main__':
     #     headers['User-Agent']=ua.random
     #     print(headers)
     # time.sleep(5)
-    GetIpThread(20).start()
-    time.sleep(5)
+    # GetIpThread(10).start()
+    update_ips()
+    thread_lis=[]
+    for i in range(5):
+        thread_lis.append(Thread(target=multi_thread,args=['70604982']))
+    for item in thread_lis:
+        item.start()
+        time.sleep(0.1)
 
-    post_url("70604982")
+
+    print()
+
+    # time.sleep(5)
+    # post_url("70604982")
     # 2020/4/9 21:45:48
     # random_url(69541443)
     # print(dataenc("db75d87c-ad72-42db-b00f-271d2a94bd6d", 167))
-    print()
-
     # h={1,2,3,5,7,9,1334}
     # ss=''
     # for item in h:
