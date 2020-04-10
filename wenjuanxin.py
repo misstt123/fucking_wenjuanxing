@@ -12,11 +12,31 @@ import threading
 import json
 import jieba.analyse
 from urllib.parse import urlencode
+import configparser
 from threading import Thread  # 导入线程函数
 import threading;
 
 ua = UserAgent()
+count_mutex=0#使用量mutex
 
+file = 'config.ini'
+
+# 创建配置文件对象
+config_parse = configparser.ConfigParser()
+
+# 读取文件
+config_parse.read(file, encoding='utf-8')
+use_count=config_parse.getint("ip","count")  #ip使用量
+# 获取特定section
+# ipuse = config_parse.getint('ip','count') 	# 返回结果为元组
+
+# config_parse.set('ip',"count",str(12580))
+# use_count=config_parse.getint("ip","count")
+# with open("config.ini","w+") as f:
+#      config_parse.write(f)
+
+# print(ipuse)
+# print(use_count)
 '''
 headers = {
     'Connection': 'keep-alive',
@@ -343,7 +363,7 @@ def genertate_sentence():
 
 ips = []  # ip列表
 mutex = 0  # 标志位
-use_count=0  #ip使用量
+
 def update_ips():
     global  ips
     lis = []
@@ -358,7 +378,7 @@ def update_ips():
     # content = json.loads(res.text, encoding='utf-8')['data']['data']
     # 按照\n分割获取到的IP
     res_text=res.text.strip()
-    if( "fdfgdf" in res_text):
+    if( "用完" in res_text):
         notice_wechat("ip量用完了","{} 总数为：{}".format(current_time(0),use_count))
         sys.exit(0)
     elif("订单过期" in res_text):
@@ -459,12 +479,22 @@ for item in div:
     }
     type_lis.append(dic_item)
 
+def update_config_file(num):
+    # config_parse.set('ip',"count",str(12580))
+    # use_count=config_parse.getint("ip","count")
+    config_parse.set("ip","count",str(num))
+    with open("config.ini", "w+") as f:
+        config_parse.write(f)
+
+    f.close()
+
 
 def post_url(curid):
     '''
     生成1$1}2$2}3$3}4$1}5$3}6$2}7$2}8$2}9$2}10$2}11$1}12$1}13$
        1$2} 2$2}3$1}4$3}5$3}6$3}7$3}8$2}9$2}10$2}11$4}12$1|2|3|4|5}13$
     :return:
+    '''
     '''
     # 代理服务器
     proxyHost = "http-dyn.abuyun.com"
@@ -480,17 +510,29 @@ def post_url(curid):
         "user": proxyUser,
         "pass": proxyPass,
     }
+    '''
+    global use_count
+    global count_mutex
+    if(len(ips)<=0):
+        update_ips()
     proxies = {
         "https": "182.247.60.216:52142",
         "http": "182.247.60.216:52142"
     }
     global mutex
     i = -1
+
     while(mutex==0 and len(ips)>0):
         mutex=1
         i = random_num(0, len(ips) - 1)
         ip=ips[i]
         del ips[i]
+        while(count_mutex==0):
+            count_mutex=1
+            use_count=use_count+1
+            update_config_file(use_count)
+            count_mutex=0
+            break
         mutex=0
         proxies['https'] = ip
         proxies['http'] = ip
@@ -597,7 +639,10 @@ if __name__ == '__main__':
     #     headers['User-Agent']=ua.random
     #     print(headers)
     # time.sleep(5)
+
     # GetIpThread(10).start()
+
+
     update_ips()
     thread_lis=[]
     for i in range(5):
