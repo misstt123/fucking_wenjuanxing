@@ -367,10 +367,9 @@ def update_ips():
     global  ips
     global mutex
 
-    lis = []
-    for i in range(3):
-        lis.append(i + 1)
-
+    # lis = []
+    # for i in range(3):
+    #     lis.append(i + 1)
     # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
     # 获取IP列表
     apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=8e497788b881ad1c19ff7521990b6bd3"
