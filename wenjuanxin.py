@@ -9,13 +9,14 @@ import configparser
 from threading import Thread  # 导入线程函数
 from threading import Lock
 import threading
+import traceback
 # import math
 # from faker import Factory
 # from urllib import parse
 # import json
 # import jieba.analyse
 # from urllib.parse import urlencode
-ua = UserAgent()
+ua = UserAgent(use_cache_server=False)
 # count_mutex=0#使用量mutex
 
 file = 'config.ini'
@@ -194,7 +195,7 @@ def random_url(curid):
 
 
 def jqsignAndjqnonce(curid):
-    url = "https://www.wjx.cn/m/{}.aspx".format(curid)
+    url = f"https://www.wjx.cn/m/{curid}.aspx"
     head = {
         'Connection': 'keep-alive',
         'Pragma': 'no-cache',
@@ -372,7 +373,7 @@ def update_ips():
     #     lis.append(i + 1)
     # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
     # 获取IP列表
-    apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=8e497788b881ad1c19ff7521990b6bd3"
+    apiUrl ="http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=15&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
     res = requests.get(apiUrl, timeout=30)
     # content = json.loads(res.text, encoding='utf-8')['data']['data']
     # 按照\n分割获取到的IP
@@ -436,7 +437,7 @@ class GetIpThread(threading.Thread):
 
 
 # 获取问卷星题目个数以及类型
-default_url = "https://www.wjx.cn/m/70604982.aspx"
+default_url = "https://www.wjx.cn/m/71068471.aspx"
 default_head = {
     'Connection': 'keep-alive',
     'Pragma': 'no-cache',
@@ -509,122 +510,148 @@ def post_url(curid):
         "pass": proxyPass,
     }
     '''
-    global use_count
+    # global use_count
     # global count_mutex
     global mutex
-    mutex.acquire(blocking=False)
-    if(len(ips)<=0):
-        update_ips()
-    mutex.release()
-    proxies = {
-        "https": "182.247.60.216:52142",
-        "http": "182.247.60.216:52142"
-    }
-
-
-    while(time.sleep(0.1),len(ips)>0):
-        mutex.acquire(blocking=True)
-        i = random_num(0, len(ips) - 1)
-        ip=ips[i]
-        del ips[i]
-        # while(count_mutex==0):
-        #     count_mutex=1
-        use_count=use_count+1
-        update_config_file(use_count)
-        #     count_mutex=0
+    while(time.sleep(0.1),True):
+        '''
+        mutex.acquire(blocking=False)
+        if(len(ips)<=0):
+            update_ips()
         mutex.release()
-        proxies['https'] = ip
-        proxies['http'] = ip
-        break
-    while(1):
-        url = "https://www.wjx.cn/joinnew/processjq.ashx"
-        # url="https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020%2F4%2F8%2015%3A47%3A45&source=directphone&submittype=1&ktimes=61&hlv=1&rn=2027509209.00021182&jpm=2&lct=10097&t=1586332080065&jqnonce=066217aa-9371-432d-862c-2bbec0bb5c38&jqsign=177306%60%60%2C8260%2C523e%2C973b%2C3ccdb1cc4b29"
-
-        params = random_url(curid)
-
-        # print(url)
-        data = ''
-        for i in range(div_num):
-
-            if (type_lis[i]['type'] == '1'):
-                ss = '{}${}'.format(i + 1, genertate_sentence()) + '}'
-            elif (type_lis[i]['type'] == '3'):
-                ss = '{}${}'.format(i + 1, random_num(1, int(type_lis[i]['num']))) + '}'
-            elif (type_lis[i]['type'] == '4'):
-
-                single_num = random_num(0, int(type_lis[i]['num']))
-                h_set = set()
-                while (len(h_set) < single_num):
-                    h_set.add(random.randint(1, int(type_lis[i]['num'])))
-                pos_str = ''
-                for item in h_set:
-                    pos_str += ('|' + str(item))
-                pos_str = pos_str.lstrip('|')
-                # print(pos_str)
-
-                ss = '{}${}'.format(i + 1, pos_str) + '}'
-            data += ss
-        # parameter = parse.quote(parameter.rstrip('}'))
-        data = data.rstrip('}')
-        # parameter="submitdata=1%241%7D2%243%7D3%243%7D4%242%7D5%241%7D6%243%7D7%242%7D8%242%7D9%242%7D10%242%7D11%242%7D12%244%7D13%24"
-        data_s = {
-            "submitdata": data
-        }
-        # print(data_s)
-        # print(str(params))
-        # print(url)
         '''
-        heee = {
-            'Connection': 'keep-alive',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache',
-            'Accept': 'text/plain, */*; q=0.01',
-            'Sec-Fetch-Dest': 'empty',
-            'X-Requested-With': 'XMLHttpRequest',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Origin': 'https://www.wjx.cn',
-            'Sec-Fetch-Site': 'same-origin',
-            'Sec-Fetch-Mode': 'cors',
-            'Referer': 'https://www.wjx.cn/m/69541443.aspx',
-            'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-            'Cookie': 'acw_tc=2f624a3115861933050761611e33b571dd80434ca8f944e4b1f98cfcd4f598; .ASPXANONYMOUS=jT7bwMhC1gEkAAAAZTgzYTViNTMtYTBlZi00YzU5LThkZTYtODI2YTRlOWY3ZTdl_YZjKzSQl1rIe13zZjB3AWvG-tE1; UM_distinctid=171507d124f30d-0402fa4b188329-4313f6f-144000-171507d12502a2; CNZZDATA4478442=cnzz_eid%3D1767111020-1586188379-%26ntime%3D1586188379; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184676,1586184742,1586192780,1586220431; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586220431; join_69541443=1; crudat=2020-04-04 21:02:52; SojumpSurvey=0102A7D8987B8DDAD708FEA778AA02AFDAD70800076C00790068005F0067006F00640000012F00FFF83874F5A780B3F0152028DA0B65F5DB3A58F513; WjxUser=UserName=lyh_god; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586220561|1586220547; jpckey=%E5%8C%96%E5%A6%86',
-            'Content-Type': 'text/plain',
-            'Cookie': 'LastActivityJoin=69541443,105388013325; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1586222257|1586220547'
+
+        proxies = {
+            "https": "182.247.60.216:52142",
+            "http": "182.247.60.216:52142"
         }
-        '''
-        # headers['User-Agent'] = ua.random
-        # index = random_num(0, len(ips) - 1)
-        # https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020-04-07%2009%3A30%3A36&source=directphone&submittype=1&ktimes=237&hlv=1&rn=2027509232.19314722&jpm=2&t=1586223056033&jqnonce=6dbf66f4-9a9c-449f-b646-f61e36faf41e&jqsign=1cea11a3*>f>d*33>a*e131*a16b41afa36
-        # resp = requests.get(targetUrl, proxies=proxies)
-        try:
-            res = requests.post(
-                url, headers=headers, data=data_s, params=params,
-                proxies=proxies)
-            message=res.text
-            status_code=message.split('〒')[0]
-            # print(status_code)
-            if(int(status_code)!=10):
+        ip=0
+        if(len(ips)>0):
+            mutex.acquire(blocking=True)
+            i = random_num(0, len(ips) - 1)
+            ip=ips[i]
+            del ips[i]
+            mutex.release()
+            proxies['https'] = ip
+            proxies['http'] = ip
+        # break
+        while(1):
+            url = "https://www.wjx.cn/joinnew/processjq.ashx"
+            # url="https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020%2F4%2F8%2015%3A47%3A45&source=directphone&submittype=1&ktimes=61&hlv=1&rn=2027509209.00021182&jpm=2&lct=10097&t=1586332080065&jqnonce=066217aa-9371-432d-862c-2bbec0bb5c38&jqsign=177306%60%60%2C8260%2C523e%2C973b%2C3ccdb1cc4b29"
+
+            params = random_url(curid)
+
+            # print(url)
+            data = ''
+            for i in range(div_num):
+
+                if (type_lis[i]['type'] == '1'):
+                    ss = '{}${}'.format(i + 1, genertate_sentence()) + '}'
+                elif (type_lis[i]['type'] == '3'):
+                    ss = '{}${}'.format(i + 1, random_num(1, int(type_lis[i]['num']))) + '}'
+                elif (type_lis[i]['type'] == '4'):
+
+                    single_num = random_num(0, int(type_lis[i]['num']))
+                    h_set = set()
+                    while (len(h_set) < single_num):
+                        h_set.add(random.randint(1, int(type_lis[i]['num'])))
+                    pos_str = ''
+                    for item in h_set:
+                        pos_str += ('|' + str(item))
+                    pos_str = pos_str.lstrip('|')
+                    # print(pos_str)
+
+                    ss = '{}${}'.format(i + 1, pos_str) + '}'
+                data += ss
+            # parameter = parse.quote(parameter.rstrip('}'))
+            data = data.rstrip('}')
+            # parameter="submitdata=1%241%7D2%243%7D3%243%7D4%242%7D5%241%7D6%243%7D7%242%7D8%242%7D9%242%7D10%242%7D11%242%7D12%244%7D13%24"
+            data_s = {
+                "submitdata": data
+            }
+            # print(data_s)
+            # print(str(params))
+            # print(url)
+            '''
+            heee = {
+                'Connection': 'keep-alive',
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache',
+                'Accept': 'text/plain, */*; q=0.01',
+                'Sec-Fetch-Dest': 'empty',
+                'X-Requested-With': 'XMLHttpRequest',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Origin': 'https://www.wjx.cn',
+                'Sec-Fetch-Site': 'same-origin',
+                'Sec-Fetch-Mode': 'cors',
+                'Referer': 'https://www.wjx.cn/m/69541443.aspx',
+                'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+                'Cookie': 'acw_tc=2f624a3115861933050761611e33b571dd80434ca8f944e4b1f98cfcd4f598; .ASPXANONYMOUS=jT7bwMhC1gEkAAAAZTgzYTViNTMtYTBlZi00YzU5LThkZTYtODI2YTRlOWY3ZTdl_YZjKzSQl1rIe13zZjB3AWvG-tE1; UM_distinctid=171507d124f30d-0402fa4b188329-4313f6f-144000-171507d12502a2; CNZZDATA4478442=cnzz_eid%3D1767111020-1586188379-%26ntime%3D1586188379; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184676,1586184742,1586192780,1586220431; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586220431; join_69541443=1; crudat=2020-04-04 21:02:52; SojumpSurvey=0102A7D8987B8DDAD708FEA778AA02AFDAD70800076C00790068005F0067006F00640000012F00FFF83874F5A780B3F0152028DA0B65F5DB3A58F513; WjxUser=UserName=lyh_god; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586220561|1586220547; jpckey=%E5%8C%96%E5%A6%86',
+                'Content-Type': 'text/plain',
+                'Cookie': 'LastActivityJoin=69541443,105388013325; SERVERID=6142ed0ee68ecc71fb491c53c82ec4a0|1586222257|1586220547'
+            }
+            '''
+            # headers['User-Agent'] = ua.random
+            # index = random_num(0, len(ips) - 1)
+            # https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020-04-07%2009%3A30%3A36&source=directphone&submittype=1&ktimes=237&hlv=1&rn=2027509232.19314722&jpm=2&t=1586223056033&jqnonce=6dbf66f4-9a9c-449f-b646-f61e36faf41e&jqsign=1cea11a3*>f>d*33>a*e131*a16b41afa36
+            # resp = requests.get(targetUrl, proxies=proxies)
+            try:
+                res = requests.post(
+                    url, headers=headers, data=data_s, params=params,
+                    proxies=proxies)
+                message=res.text
+                status_code=message.split('〒')[0]
+                # print(status_code)
+                if(int(status_code)!=10):
+                    break
+                print(message)
+            except Exception as e:
+                traceback.print_exc()
+                notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
+                # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
                 break
-
-
-            print(message)
-        except:
-            notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
-            # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
-            break
-        finally:
-            time.sleep(random.uniform(0.5, 2))
-
-    return
+            finally:
+                time.sleep(random.uniform(0.5, 2))
 
 
 def multi_thread(curid):
     try:
-        while(1):
-            post_url(curid)
+        post_url(curid)
     except Exception as e:
         notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
+        print(e)
+
+
+class GetIpThread2(threading.Thread):
+
+    def run(self):
+        global mutex
+        global use_count
+        while True:
+            if(len(ips)<=0):
+                mutex.acquire()
+                apiUrl ="http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=15&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
+                res = requests.get(apiUrl, timeout=45)
+                res_text = res.text.strip()
+                if ("用完" in res_text or "ip" in res_text):
+                    notice_wechat("ip量用完了", "{} 总数为：{}".format(current_time(0), use_count))
+                    sys.exit(0)
+                elif ("订单过期" in res_text):
+                    notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0), use_count))
+                    sys.exit(0)
+                elif("订单不存在" in res_text):
+                    notice_wechat("订单不存在", "{} 总数为：{}".format(current_time(0), use_count))
+                    sys.exit(0)
+                ips.clear()
+                use_count = use_count + 15
+                update_config_file(use_count)
+                items = res_text.split('\n')
+                for item in items:
+                    ips.append(item.strip())
+                mutex.release()
+
+
 
 
 if __name__ == '__main__':
@@ -647,21 +674,21 @@ if __name__ == '__main__':
     # time.sleep(5)
     # update_config_file(12580)
 
-    mutex.acquire()
-    if(len(ips)<=0):
-        update_ips()
-    mutex.release()
+    # mutex.acquire()
+
+    GetIpThread2().start()
+    time.sleep(2)
     thread_lis=[]
-    for i in range(3):
-        thread_lis.append(Thread(target=multi_thread,args=['70604982']))
+    for i in range(2):
+        thread_lis.append(Thread(target=multi_thread,args=['71068471']))
     for item in thread_lis:
         item.start()
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     print()
 
     # time.sleep(5)
-    # post_url("70604982")
+    # post_url("71068471")
     # 2020/4/9 21:45:48
     # random_url(69541443)
     # print(dataenc("db75d87c-ad72-42db-b00f-271d2a94bd6d", 167))
