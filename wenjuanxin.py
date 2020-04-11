@@ -608,12 +608,18 @@ def post_url(curid):
                 print(message)
             except Exception as e:
                 traceback.print_exc()
-                notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
+
+                # notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
                 # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
                 break
             finally:
                 time.sleep(random.uniform(0.5, 2))
 
+#更新ip失败数目
+def update_fail_count(num):
+    config_parse.set("ip","fail",str(num))
+    with open("config.ini", "w+") as f:
+        config_parse.write(f)
 
 def multi_thread(curid):
     try:
