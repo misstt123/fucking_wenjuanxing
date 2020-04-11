@@ -610,6 +610,7 @@ def post_url(curid):
 
             print(message)
         except:
+            notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
             # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
             break
         finally:
@@ -651,11 +652,11 @@ if __name__ == '__main__':
         update_ips()
     mutex.release()
     thread_lis=[]
-    for i in range(4):
+    for i in range(3):
         thread_lis.append(Thread(target=multi_thread,args=['70604982']))
     for item in thread_lis:
         item.start()
-        time.sleep(0.2)
+        time.sleep(0.1)
 
     print()
 
