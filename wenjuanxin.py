@@ -2,25 +2,23 @@ from fake_useragent.fake import UserAgent
 import requests
 import random
 import sys
-from faker import Factory
 import time
-import math
 import re
-from urllib import parse
 from bs4 import BeautifulSoup
-import threading
-import json
-import jieba.analyse
-from urllib.parse import urlencode
 import configparser
 from threading import Thread  # 导入线程函数
-import threading;
-
+from threading import Lock
+import threading
+# import math
+# from faker import Factory
+# from urllib import parse
+# import json
+# import jieba.analyse
+# from urllib.parse import urlencode
 ua = UserAgent()
-count_mutex=0#使用量mutex
+# count_mutex=0#使用量mutex
 
 file = 'config.ini'
-
 # 创建配置文件对象
 config_parse = configparser.ConfigParser()
 
@@ -362,14 +360,16 @@ def genertate_sentence():
 
 
 ips = []  # ip列表
-mutex = 0  # 标志位
-
+mutex=threading.Lock()
+# mutex.acquire()
+# mutex.release()
 def update_ips():
     global  ips
+    global mutex
+
     lis = []
     for i in range(3):
         lis.append(i + 1)
-    global mutex
 
     # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
     # 获取IP列表
@@ -378,21 +378,19 @@ def update_ips():
     # content = json.loads(res.text, encoding='utf-8')['data']['data']
     # 按照\n分割获取到的IP
     res_text=res.text.strip()
-    if( "用完" in res_text):
+    if( "用完" in res_text or "ip" in res_text):
         notice_wechat("ip量用完了","{} 总数为：{}".format(current_time(0),use_count))
         sys.exit(0)
     elif("订单过期" in res_text):
         notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0),use_count))
         sys.exit(0)
-    mutex = 1
+    mutex.acquire()
     ips.clear()
     items = res_text.split('\n')
     for item in items:
         ips.append(item.strip())
-        # for item in content:
-        #     ips.append("{}:{}".format(item['ip'], item['port']))
-    mutex = 0
-    print(ips)
+    mutex.release()
+
 
 
 class GetIpThread(threading.Thread):
@@ -413,7 +411,7 @@ class GetIpThread(threading.Thread):
             # content = json.loads(res.text, encoding='utf-8')['data']['data']
             # 按照\n分割获取到的IP
 
-            mutex = 1
+            mutex.acquire()
             ips.clear()
             items = res.text.strip().split('\n')
             for item in items:
@@ -421,7 +419,7 @@ class GetIpThread(threading.Thread):
             # for item in content:
             #     ips.append("{}:{}".format(item['ip'], item['port']))
 
-            mutex = 0
+            mutex.release()
             print(ips)
             # print("长度：{}，{}".format(len(ips),ips))
             # ips = res.split('\n');
@@ -479,6 +477,8 @@ for item in div:
     }
     type_lis.append(dic_item)
 
+
+
 def update_config_file(num):
     # config_parse.set('ip',"count",str(12580))
     # use_count=config_parse.getint("ip","count")
@@ -486,7 +486,6 @@ def update_config_file(num):
     with open("config.ini", "w+") as f:
         config_parse.write(f)
 
-    f.close()
 
 
 def post_url(curid):
@@ -512,28 +511,29 @@ def post_url(curid):
     }
     '''
     global use_count
-    global count_mutex
+    # global count_mutex
+    global mutex
+    mutex.acquire(blocking=False)
     if(len(ips)<=0):
         update_ips()
+    mutex.release()
     proxies = {
         "https": "182.247.60.216:52142",
         "http": "182.247.60.216:52142"
     }
-    global mutex
-    i = -1
 
-    while(mutex==0 and len(ips)>0):
-        mutex=1
+
+    while(time.sleep(0.1),len(ips)>0):
+        mutex.acquire(blocking=True)
         i = random_num(0, len(ips) - 1)
         ip=ips[i]
         del ips[i]
-        while(count_mutex==0):
-            count_mutex=1
-            use_count=use_count+1
-            update_config_file(use_count)
-            count_mutex=0
-            break
-        mutex=0
+        # while(count_mutex==0):
+        #     count_mutex=1
+        use_count=use_count+1
+        update_config_file(use_count)
+        #     count_mutex=0
+        mutex.release()
         proxies['https'] = ip
         proxies['http'] = ip
         break
@@ -608,6 +608,7 @@ def post_url(curid):
             if(int(status_code)!=10):
                 break
 
+
             print(message)
         except:
             # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
@@ -642,15 +643,17 @@ if __name__ == '__main__':
 
     # GetIpThread(10).start()
 
+    # update_config_file(1323)
+    # time.sleep(5)
+    # update_config_file(12580)
 
     update_ips()
     thread_lis=[]
-    for i in range(5):
+    for i in range(4):
         thread_lis.append(Thread(target=multi_thread,args=['70604982']))
     for item in thread_lis:
         item.start()
-        time.sleep(0.1)
-
+        time.sleep(0.2)
 
     print()
 
