@@ -384,12 +384,12 @@ def update_ips():
     elif("订单过期" in res_text):
         notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0),use_count))
         sys.exit(0)
-    mutex.acquire()
+    # mutex.acquire()
     ips.clear()
     items = res_text.split('\n')
     for item in items:
         ips.append(item.strip())
-    mutex.release()
+    # mutex.release()
 
 
 
@@ -647,7 +647,10 @@ if __name__ == '__main__':
     # time.sleep(5)
     # update_config_file(12580)
 
-    update_ips()
+    mutex.acquire()
+    if(len(ips)<=0):
+        update_ips()
+    mutex.release()
     thread_lis=[]
     for i in range(4):
         thread_lis.append(Thread(target=multi_thread,args=['70604982']))
