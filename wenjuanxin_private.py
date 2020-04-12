@@ -17,7 +17,6 @@ from threading import Thread  # 导入线程函数
 from threading import Lock
 import threading
 import traceback
-
 # import math
 # from faker import Factory
 # from urllib import parse
@@ -36,26 +35,6 @@ config_parse.read(file, encoding='utf-8')
 use_count = config_parse.getint("ip", "count")  # ip使用量
 use_fail = config_parse.getint("ip", "fail")  # ip失败数量
 read_urid = config_parse.getint("wjx", "id")  # 问卷星id号
-
-'''
-headers = {
-    'Connection': 'keep-alive',
-    'Cache-Control': 'no-cache',
-    'Accept': 'text/plain, */*; q=0.01',
-    'Sec-Fetch-Dest': 'empty',
-    'X-Requested-With': 'XMLHttpRequest',
-    # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Origin': 'https://www.wjx.cn',
-    'Sec-Fetch-Site': 'same-origin',
-    'Sec-Fetch-Mode': 'cors',
-    'Referer': 'https://www.wjx.cn/m/69541443.aspx',
-    'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-    # 'Cookie': 'acw_tc=2f624a6715862234817474764e34fe904cff90c9618e52b954393be92b1e1b; .ASPXANONYMOUS=53FmAw9D1gEkAAAAZjViNTMyZjgtYWQ1YS00YjJiLWJiODQtZjNhYTdlMGIzNmM4sPimJDlFh8s-f5J4XQSsiq83Wms1; UM_distinctid=17152498a1eb-03dcbb5842fbcf-4313f6f-144000-17152498a1f1ce; Hm_lvt_21be24c80829bd7a683b2c536fcf520b=1586184742,1586192780,1586220431,1586271053; crudat=2020-04-04 21:02:52; WjxUser=UserName=lyh_god; _cnzz_CV4478442=%E7%94%A8%E6%88%B7%E7%89%88%E6%9C%AC%7C%E5%85%8D%E8%B4%B9%E7%89%88%7C1586271060684; SojumpSurvey=0102A6A2B4F313DBD708FEA642C67A35DBD70800076C00790068005F0067006F00640000012F00FF28407EB2DC91E35CC31E6D4FE3C9918963C6B8D2; jpckey=%E5%8C%96%E5%A6%86; jac69541443=00021182; CNZZDATA4478442=cnzz_eid%3D293256310-1586220780-%26ntime%3D1586328780; Hm_lpvt_21be24c80829bd7a683b2c536fcf520b=1586332067; SERVERID=3f9180de4977a2b2031e23b89d53baa6|1586332066|1586330771',
-    'Content-Type': 'text/plain',
-    # 'Cookie': 'acw_tc=2f624a7715862250966568261e7ac176004fc2b35b0e49cfdd5d8e1c619bf4; .ASPXANONYMOUS=Z-HixRJD1gEkAAAAMmJiMGQyYzQtNjkxNS00OTE2LTgxNDgtMDg2MDQ3YTdmZTdij9Q5ZCO0wtuHW_DgxVbWy1xvSog1; LastActivityJoin=69541443,105426626886; SERVERID=2a2dcf6de1f5b497e80dc0f7231b4801|1586348794|1586348794'
-}
-'''
 
 
 # 一系列的工具方法
@@ -206,37 +185,6 @@ def genertate_sentence():
 ips = []  # ip列表
 mutex = threading.Lock()
 
-
-# mutex.acquire()
-# mutex.release()
-def update_ips():
-    global ips
-    global mutex
-
-    # lis = []
-    # for i in range(3):
-    #     lis.append(i + 1)
-    # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
-    # 获取IP列表
-    apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=15&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
-    res = requests.get(apiUrl, timeout=30)
-    # content = json.loads(res.text, encoding='utf-8')['data']['data']
-    # 按照\n分割获取到的IP
-    res_text = res.text.strip()
-    if ("用完" in res_text or "ip" in res_text):
-        notice_wechat("ip量用完了", "{} 总数为：{}".format(current_time(0), use_count))
-        sys.exit(0)
-    elif ("订单过期" in res_text):
-        notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0), use_count))
-        sys.exit(0)
-    # mutex.acquire()
-    ips.clear()
-    items = res_text.split('\n')
-    for item in items:
-        ips.append(item.strip())
-    # mutex.release()
-
-
 # 获取问卷星题目个数以及类型
 default_url = f"https://www.wjx.cn/m/{read_urid}.aspx"
 default_head = {
@@ -272,49 +220,6 @@ for item in div:
 
     }
     type_lis.append(dic_item)
-
-
-class GetIpThread(threading.Thread):
-    def __init__(self, fetchSecond):
-        super(GetIpThread, self).__init__();
-        self.fetchSecond = fetchSecond;
-
-    def run(self):
-        lis = []
-        for i in range(3):
-            lis.append(i + 1)
-        global mutex
-        while True:
-            # apiUrl = "https://ip.jiangxianli.com/api/proxy_ips?country=中国&page={}".format(random.randint(1, 7))
-            # 获取IP列表
-            apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=8e497788b881ad1c19ff7521990b6bd3"
-            res = requests.get(apiUrl, timeout=30)
-            # content = json.loads(res.text, encoding='utf-8')['data']['data']
-            # 按照\n分割获取到的IP
-
-            # mutex.acquire()
-            ips.clear()
-            items = res.text.strip().split('\n')
-            for item in items:
-                ips.append(item.strip())
-            # for item in content:
-            #     ips.append("{}:{}".format(item['ip'], item['port']))
-
-            # mutex.release()
-            print(ips)
-            # print("长度：{}，{}".format(len(ips),ips))
-            # ips = res.split('\n');
-            # # 利用每一个IP
-            # for proxyip in ips:
-            #
-            #     if proxyip.strip() == '':
-            #         continue
-            #
-            #     print(proxyip)
-            #     # 开启一个线程
-            #     CrawlThread(proxyip).start();
-            # 休眠
-            time.sleep(self.fetchSecond);
 
 
 class GetIpThread2(threading.Thread):
@@ -361,8 +266,12 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
 
     def __init__(self, threadID, curid):
         threading.Thread.__init__(self)
+        self.ips=[]
+        self.update_ips()
         self.threadID = threadID
         self.curid = curid
+        self.use_fail=config_parse.getint("ip","fail"+self.threadID)
+        self.use_count=config_parse.get("ip","count"+self.threadID)
         self.headers = {
             'Accept': 'text/plain, */*; q=0.01',
             'Accept-Encoding': 'gzip, deflate, br',
@@ -389,9 +298,32 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
             notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
             print(e)
 
-    # 更新ip失败数目
-    def update_fail_count(self, num):
-        config_parse.set("ip", "fail", str(num))
+    def update_ips(self):
+
+        apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
+        res = requests.get(apiUrl, timeout=7)
+        res_text = res.text.strip()
+        if ("用完" in res_text or "ip" in res_text):
+            notice_wechat("ip量用完了", "{} 总数为：{}".format(current_time(0), use_count))
+            sys.exit(0)
+        elif ("订单过期" in res_text):
+            notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0), use_count))
+            sys.exit(0)
+        self.use_count=self.use_count+10
+        self.update_config_count(self.use_count)
+        items = res_text.split('\n')
+        for item in items:
+            self.ips.append(item.strip())
+
+    def update_config_count(self, num):
+        # config_parse.set('ip',"count",str(12580))
+        # use_count=config_parse.getint("ip","count")
+        config_parse.set("ip", "count"+self.threadID, str(num))
+        with open("config.ini", "w+") as f:
+            config_parse.write(f)
+
+    def update_config_fail(self, num):
+        config_parse.set("ip", "fail"+self.threadID, str(num))
         with open("config.ini", "w+") as f:
             config_parse.write(f)
 
@@ -493,12 +425,10 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
         # useAliVerify = re.search("var useAliVerify=\d;", res.text).group(0)
 
         # print("useAliVerify:" + str(useAliVerify[17]))
-        #
         # print("rndnum:" + str(rndnum))
         # print("jqnonce:" + str(jqnonce))
         soup = BeautifulSoup(res.text, 'html.parser')
         r_starttime = soup.find(attrs={'id': 'starttime'}).attrs['value']
-        # print("starttime:"+str(r_starttime).strip())
         source = soup.find(attrs={'id': 'source'}).attrs['value']
         lis = []
         lis.append(rndnum)
@@ -551,39 +481,25 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
             "pass": proxyPass,
         }
         '''
-        # global use_count
-        # global count_mutex
-        global mutex
         global use_fail
         proxies = {
             "https": "182.247.60.216:52142",
             "http": "182.247.60.216:52142"
         }
-        while (time.sleep(0.1), True):
-            '''
-            mutex.acquire(blocking=False)
-            if(len(ips)<=0):
-                update_ips()
-            mutex.release()
-            '''
-            # status=threading.current_thread().is_alive()
-            # print("{}:{}".format(self.threadID,status))
-            if (len(ips) <= 0):
-                continue
-            mutex.acquire(blocking=True)
-            i = random_num(0, len(ips) - 1)
-            ip = ips[i]
-            del ips[i]
-            mutex.release()
+        while (time.sleep(0.05), True):
+
+            if (len(self.ips) <= 0):
+                self.update_ips()
+            i = random_num(0, len(self.ips) - 1)
+            ip = self.ips[i]
+            del self.ips[i]
             proxies['https'] = ip
             proxies['http'] = ip
-            # break
             url = "https://www.wjx.cn/joinnew/processjq.ashx"
             # url="https://www.wjx.cn/joinnew/processjq.ashx?curid=69541443&starttime=2020%2F4%2F8%2015%3A47%3A45&source=directphone&submittype=1&ktimes=61&hlv=1&rn=2027509209.00021182&jpm=2&lct=10097&t=1586332080065&jqnonce=066217aa-9371-432d-862c-2bbec0bb5c38&jqsign=177306%60%60%2C8260%2C523e%2C973b%2C3ccdb1cc4b29"
 
             params = self.random_url(curid)
 
-            # print(url)
             data = ''
             for i in range(div_num):
 
@@ -609,7 +525,6 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
             data_s = {
                 "submitdata": data
             }
-
             count = 0  # 单个ip使用计数器
             while (True):
                 try:
@@ -623,53 +538,21 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
                     count = count + 1
                     message = res.text
                     status_code = message.split('〒')[0]
-                    # print(status_code)
                     if (int(status_code) != 10):
                         break
                     print("{}:{}".format(self.threadID, message))
                 except Exception as e:
                     if (count == 0):
-                        use_fail=use_fail+1
-                        self.update_fail_count(use_fail)
+                        use_fail=self.use_fail+1
+                        self.update_config_fail(use_fail)
                     repr(e)
-                    # notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
-                    # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
                     break
                 finally:
                     time.sleep(random.uniform(0.5, 1.3))
 
 
-class pr_ips(threading.Thread):
-
-    def __init__(self,fetchTime):
-        threading.Thread.__init__(self)
-        self.fetchTime=fetchTime
-    def run(self):
-        time.sleep(self.fetchTime)
-        print(ips)
-
 
 if __name__ == '__main__':
-    # print("{}${}".format(3,genertate_sentence())+'}')
-
-    # h = set()
-    # while (len(h) < 10):
-    #     h.add(random.randint(10, 100))
-    #
-    # print(h)
-
-    # for i in range(30):
-    #     headers['User-Agent']=ua.random
-    #     print(headers)
-    # time.sleep(5)
-
-    # GetIpThread(10).start()
-
-    # update_config_file(1323)
-    # time.sleep(5)
-    # update_config_file(12580)
-
-    # mutex.acquire()
 
     GetIpThread2(10).start()
     time.sleep(2)
@@ -679,152 +562,3 @@ if __name__ == '__main__':
         time.sleep(0.2)
 
     print()
-
-    # time.sleep(5)
-    # post_url("71068471")
-    # 2020/4/9 21:45:48
-    # random_url(69541443)
-    # print(dataenc("db75d87c-ad72-42db-b00f-271d2a94bd6d", 167))
-    # h={1,2,3,5,7,9,1334}
-    # ss=''
-    # for item in h:
-    #     ss+=('|'+str(item))
-    # ss=ss.lstrip('|')
-    # print(ss)
-    # res = requests.get("https://www.wjx.cn/m/69541443.aspx")
-    # random_parameter()
-    # print(genertate_sentence())
-
-    # print(len(titile_keyword))
-    # print(div_num)
-
-    # first_head = {
-    #     'Connection': 'keep-alive',
-    #     'Pragma': 'no-cache',
-    #     'Cache-Control': 'no-cache',
-    #     'Upgrade-Insecure-Requests': '1',
-    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-    #     'Sec-Fetch-Dest': 'document',
-    #     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    #     'Sec-Fetch-Site': 'cross-site',
-    #     'Sec-Fetch-Mode': 'navigate',
-    #     'Sec-Fetch-User': '?1',
-    #     'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6'
-    # }
-    #
-    # last_head = {
-    #     'Connection': 'keep-alive',
-    #     'Pragma': 'no-cache',
-    #     'Cache-Control': 'no-cache',
-    #     'Sec-Fetch-Dest': 'empty',
-    #     # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36',
-    #     'Content-type': 'application/x-www-form-urlencoded',
-    #     'Accept': '*/*',
-    #     'Origin': 'https://www.qqxiuzi.cn',
-    #     'Sec-Fetch-Site': 'same-origin',
-    #     'Sec-Fetch-Mode': 'cors',
-    #     'Referer': 'https://www.qqxiuzi.cn/zh/suiji-hanzi/',
-    #     'Accept-Language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
-    #     # 'Cookie': 'PHPSESSID=3lf1onhvm9btb4o1j3v36rpb06; Hm_lvt_899df2cdf7f5a83a719fb1bb96982b18=1586088940,1586098893; Hm_lpvt_899df2cdf7f5a83a719fb1bb96982b18=1586099220; __gads=ID=dc5362b91b08801b:T=1586099219:S=ALNI_MZVe6pZs1c4h01Nyny6t-wtphUIZQ',
-    #     'Content-Type': 'application/x-www-form-urlencoded'
-    # }
-    # # bllShitapi="https://suulnnka.github.io/BullshitGenerator/index.html?主题={}&随机种子={}".format(
-    # #     '灭霸',random_num(214013,999999999)
-    # # )
-    # first_url = "https://www.qqxiuzi.cn/zh/suiji-hanzi/"
-    # first_head['User-Agent']=ua.random
-    # res1 = requests.get(first_url, headers=first_head)
-    # token=re.search("&token=.+\'",res1.text).group(0)[7:-1]
-    #
-    #
-    # cookie = res1.cookies
-    # cookies_dict = requests.utils.dict_from_cookiejar(cookie)
-    # c = json2String(cookies_dict)
-    # last_head['Cookie'] = c
-    #
-    # last_url = "https://www.qqxiuzi.cn/zh/suiji-hanzi/show.php"
-    # last_head['User-Agent']=ua.random
-    # datas={
-    #     'type':'ciyu',
-    #     'hz1':'null',
-    #     'hz2':'null',
-    #     'hz3':'null',
-    #     'cy2':'null',
-    #     'cy3':'null',
-    #     'cy4':4,
-    #     'cy5':'null',
-    #     'text':'',
-    #     'num':15,
-    #     'token':token
-    #
-    # }
-    # res2=requests.post(last_url,headers=last_head,data=datas)
-    # res2.encoding='utf-8'
-    # soup2 = BeautifulSoup(res2.text, "html.parser")
-    # ciyu_str=''
-    # for item in soup2.select('div'):
-    #      ciyu_str+=item.text
-    # print(ciyu_str)
-
-    # print(random_parameter(69541443))
-    # print(parse.quote("3;ggg:e;.5:`2.7:33.:f:f.g`122b01:;:f"))
-    # print(dataenc("08ddd9f8-69c1-4900-9e9e-dc211a32989e",123))
-    # soup = BeautifulSoup(res.text, 'html.parser')
-    # print(soup.find(attrs={'id':'source'}).attrs['value'])
-    # for i in range(10):
-    #     print(i)
-    # print(ord('w'))
-    # c, d, e, b = 365 % 10
-    # print(c)
-    # print(b)
-
-    # cookie = res.cookies
-    # cookies_dict = requests.utils.dict_from_cookiejar(cookie)
-    # c = json2String(cookies_dict)
-    # print(c)
-    # soup = BeautifulSoup(res.text, 'html.parser')
-    # print(res.text)
-    # print(re.search("rndnum=\".+\";", res.text).group(0)[8:-2])
-    # print(re.search("jqnonce=\".+\";", res.text).group(0)[9:-2])
-    # print(re.search("rndnum=.*'", res))
-    # url = "https://www.wjx.cn/joinnew/processjq.ashx?"
-    # print(current_time(0))
-    # print(current_time(3000))
-    # a = 123.456
-    # time_str = time.time()
-    # b = math.modf(time_str)[0]
-    # print(int(b * 10000000))
-
-    # print(time.time())
-    # print(int(time.time() * 1000))
-    # print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())))
-    # print(random_num(150, 350))
-    # print()
-
-    # zh_CN 表示中国大陆版
-    # fake = Factory().create('zh_CN')
-    # # 随机产生省份
-    # print(fake.province())
-    # # 随机产生城市
-    # print(fake.city())
-
-    # # 产生随机手机号
-    # print(fake.phone_number())
-    # # 产生随机姓名
-    # print(fake.name())
-    # # 产生随机地址
-    # print(fake.address())
-    # # 随机产生国家名
-    # print(fake.country())
-    # # 随机产生国家代码
-    # print(fake.country_code())
-    # # 随机产生城市名
-    # print(fake.city_name())
-    #
-    # # 产生随机email
-    # print(fake.email())
-    # # 产生随机IPV4地址
-    # print(fake.ipv4())
-    # # 产生长度在最大值与最小值之间的随机字符串
-    # print(fake.pystr(min_chars=0, max_chars=8))
-    # print(ua.random)
