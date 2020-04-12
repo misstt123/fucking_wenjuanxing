@@ -23,7 +23,7 @@ import traceback
 # import json
 # import jieba.analyse
 # from urllib.parse import urlencode
-ua = UserAgent(use_cache_server=False)
+ua = UserAgent(use_cache_server=False,path="fake_useragent_0.1.11.json")
 # count_mutex=0#使用量mutex
 
 file = 'config.ini'
@@ -343,7 +343,7 @@ class GetIpThread2(threading.Thread):
                 for item in items:
                     ips.append(item.strip())
                 mutex.release()
-            time.sleep(3)
+            time.sleep(2.5)
 
     def update_config_file(self, num):
         # config_parse.set('ip',"count",str(12580))
@@ -550,6 +550,7 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
         # global use_count
         # global count_mutex
         global mutex
+        global use_fail
         proxies = {
             "https": "182.247.60.216:52142",
             "http": "182.247.60.216:52142"
@@ -561,6 +562,8 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
                 update_ips()
             mutex.release()
             '''
+            status=threading.current_thread().is_alive()
+            print("{}:{}".format(self.threadID,status))
             if (len(ips) <= 0):
                 continue
             mutex.acquire(blocking=True)
@@ -642,10 +645,11 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
                     if (int(status_code) != 10):
                         break
                     print("{}:{}".format(self.threadID, message))
-                except:
+                except Exception as e:
                     if (count == 0):
-                        self.update_fail_count(use_fail + 1)
-                    traceback.format_exc()
+                        use_fail=use_fail+1
+                        self.update_fail_count(use_fail)
+                    traceback.print_exc()
                     # notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
                     # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
                     break
