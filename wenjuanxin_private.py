@@ -267,11 +267,14 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
     def __init__(self, threadID, curid):
         threading.Thread.__init__(self)
         self.ips=[]
-        self.update_ips()
         self.threadID = threadID
+        self.use_fail=config_parse.getint("ip","fail"+str(self.threadID))
+        self.use_count=config_parse.getint("ip","count"+str(self.threadID))
+        self.update_ips()
+
+
         self.curid = curid
-        self.use_fail=config_parse.getint("ip","fail"+self.threadID)
-        self.use_count=config_parse.get("ip","count"+self.threadID)
+
         self.headers = {
             'Accept': 'text/plain, */*; q=0.01',
             'Accept-Encoding': 'gzip, deflate, br',
@@ -318,12 +321,12 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
     def update_config_count(self, num):
         # config_parse.set('ip',"count",str(12580))
         # use_count=config_parse.getint("ip","count")
-        config_parse.set("ip", "count"+self.threadID, str(num))
+        config_parse.set("ip", "count"+str(self.threadID), str(num))
         with open("config.ini", "w+") as f:
             config_parse.write(f)
 
     def update_config_fail(self, num):
-        config_parse.set("ip", "fail"+self.threadID, str(num))
+        config_parse.set("ip", "fail"+str(self.threadID), str(num))
         with open("config.ini", "w+") as f:
             config_parse.write(f)
 
