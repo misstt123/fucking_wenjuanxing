@@ -12,6 +12,7 @@ import time
 import re
 from bs4 import BeautifulSoup
 import configparser
+from requests.adapters import HTTPAdapter
 from threading import Thread  # 导入线程函数
 from threading import Lock
 import threading
@@ -291,7 +292,7 @@ class GetIpThread(threading.Thread):
             # content = json.loads(res.text, encoding='utf-8')['data']['data']
             # 按照\n分割获取到的IP
 
-            mutex.acquire()
+            # mutex.acquire()
             ips.clear()
             items = res.text.strip().split('\n')
             for item in items:
@@ -299,7 +300,7 @@ class GetIpThread(threading.Thread):
             # for item in content:
             #     ips.append("{}:{}".format(item['ip'], item['port']))
 
-            mutex.release()
+            # mutex.release()
             print(ips)
             # print("长度：{}，{}".format(len(ips),ips))
             # ips = res.split('\n');
@@ -317,14 +318,16 @@ class GetIpThread(threading.Thread):
 
 
 class GetIpThread2(threading.Thread):
-
+    def __init__(self,fetchTime):
+        threading.Thread.__init__(self)
+        self.fetchTime=fetchTime
     def run(self):
         global mutex
         global use_count
         while True:
             if (len(ips) <= 0):
                 mutex.acquire()
-                apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=15&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
+                apiUrl = "http://180.97.220.138:1688/ProxyiPAPI.aspx?action=GetIPAPI&OrderNumber=673b316cfe73e0a2c2d6998564b06e35&poolIndex=1586699107&qty=100"
                 res = requests.get(apiUrl, timeout=45)
                 res_text = res.text.strip()
                 if ("用完" in res_text or "ip" in res_text):
@@ -336,14 +339,14 @@ class GetIpThread2(threading.Thread):
                 elif ("订单不存在" in res_text):
                     notice_wechat("订单不存在", "{} 总数为：{}".format(current_time(0), use_count))
                     sys.exit(0)
-                ips.clear()
-                use_count = use_count + 15
+                # ips.clear()
+                use_count = use_count + 50
                 self.update_config_file(use_count)
                 items = res_text.split('\n')
                 for item in items:
                     ips.append(item.strip())
                 mutex.release()
-            time.sleep(2.5)
+            time.sleep(self.fetchTime)
 
     def update_config_file(self, num):
         # config_parse.set('ip',"count",str(12580))
@@ -562,8 +565,8 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
                 update_ips()
             mutex.release()
             '''
-            status=threading.current_thread().is_alive()
-            print("{}:{}".format(self.threadID,status))
+            # status=threading.current_thread().is_alive()
+            # print("{}:{}".format(self.threadID,status))
             if (len(ips) <= 0):
                 continue
             mutex.acquire(blocking=True)
@@ -635,9 +638,13 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
             count = 0  # 单个ip使用计数器
             while (True):
                 try:
-                    res = requests.post(
+                    s=requests.session()
+                    # 重试次数为3
+                    s.mount('http://', HTTPAdapter(max_retries=3))
+                    s.mount('https://', HTTPAdapter(max_retries=3))
+                    res = s.post(
                         url, headers=self.headers, data=data_s, params=params,
-                        proxies=proxies)
+                        proxies=proxies,timeout=16)
                     count = count + 1
                     message = res.text
                     status_code = message.split('〒')[0]
@@ -649,12 +656,22 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
                     if (count == 0):
                         use_fail=use_fail+1
                         self.update_fail_count(use_fail)
-                    traceback.print_exc()
+                    repr(e)
                     # notice_wechat("出现bug了","时间:{} ip：{}".format(current_time(0),ip))
                     # notice_wechat("出现bug了", "{}:{}".format(current_time(0), str(e)))
                     break
                 finally:
-                    time.sleep(random.uniform(0.5, 2))
+                    time.sleep(random.uniform(0.5, 1.3))
+
+
+class pr_ips(threading.Thread):
+
+    def __init__(self,fetchTime):
+        threading.Thread.__init__(self)
+        self.fetchTime=fetchTime
+    def run(self):
+        time.sleep(self.fetchTime)
+        print(ips)
 
 
 if __name__ == '__main__':
@@ -679,10 +696,10 @@ if __name__ == '__main__':
 
     # mutex.acquire()
 
-    GetIpThread2().start()
+    GetIpThread2(10).start()
     time.sleep(2)
 
-    for i in range(2):
+    for i in range(3):
         Wenjuanx(i + 1, str(read_urid)).start()
         time.sleep(0.2)
 
