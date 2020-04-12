@@ -300,7 +300,7 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
 
     def update_ips(self):
 
-        apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=10&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
+        apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=5&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
         res = requests.get(apiUrl, timeout=7)
         res_text = res.text.strip()
         if ("用完" in res_text or "ip" in res_text):
@@ -309,7 +309,7 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
         elif ("订单过期" in res_text):
             notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0), use_count))
             sys.exit(0)
-        self.use_count=self.use_count+10
+        self.use_count=self.use_count+5
         self.update_config_count(self.use_count)
         items = res_text.split('\n')
         for item in items:
@@ -481,14 +481,13 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
             "pass": proxyPass,
         }
         '''
-        global use_fail
         proxies = {
             "https": "182.247.60.216:52142",
             "http": "182.247.60.216:52142"
         }
         while (time.sleep(0.05), True):
 
-            if (len(self.ips) <= 0):
+            while(len(self.ips) <= 0):
                 self.update_ips()
             i = random_num(0, len(self.ips) - 1)
             ip = self.ips[i]
