@@ -37,7 +37,7 @@ config_parse.read(file, encoding='utf-8')
 use_count = config_parse.getint("ip", "count")  # ip使用量
 use_fail = config_parse.getint("ip", "fail")  # ip失败数量
 read_urid = config_parse.getint("wjx", "id")  # 问卷星id号
-
+thread_count=config_parse.getint("wjx","thread_count")#启用线程数
 
 # 一系列的工具方法
 def notice_wechat(title, content):
@@ -272,31 +272,27 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
         self.threadID = threadID
         self.use_fail=config_parse.getint("ip","fail"+str(self.threadID))
         self.use_count=config_parse.getint("ip","count"+str(self.threadID))
-        self.logger.setLevel(logging.DEBUG)  # Log等级开关
-
-        log_path = os.path.dirname(os.getcwd()) + '/Logs/'
-        log_name = log_path + 'log.log'
-        logfile = log_name
-        file_handler = logging.FileHandler(logfile, mode='a+',encoding='utf-8')
-        file_handler.setLevel(logging.INFO)
-
-        # 第三步，定义handler的输出格式
-        formatter = logging.Formatter("%(asctime)s - [line:%(lineno)d] - %(levelname)s: %(message)s")
-        file_handler.setFormatter(formatter)
+        # self.logger.setLevel(logging.DEBUG)  # Log等级开关
+        #
+        # log_path = os.path.dirname(os.getcwd()) + '/Logs/'
+        # log_name = log_path + 'log.log'
+        # logfile = log_name
+        # file_handler = logging.FileHandler(logfile, mode='a+',encoding='utf-8')
+        # file_handler.setLevel(logging.INFO)
+        #
+        # # 第三步，定义handler的输出格式
+        # formatter = logging.Formatter("%(asctime)s - [line:%(lineno)d] - %(levelname)s: %(message)s")
+        # file_handler.setFormatter(formatter)
 
         # 第四步，将handler添加到logger里面
-        self.logger.addHandler(file_handler)
+        # self.logger.addHandler(file_handler)
 
         # 如果需要同時需要在終端上輸出，定義一個streamHandler
         # print_handler = logging.StreamHandler()  # 往屏幕上输出
         # print_handler.setFormatter(formatter)  # 设置屏幕上显示的格式
         # self.logger.addHandler(print_handler)
-
         self.update_ips()
-
-
         self.curid = curid
-
         self.headers = {
             'Accept': 'text/plain, */*; q=0.01',
             'Accept-Encoding': 'gzip, deflate, br',
@@ -579,10 +575,10 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
 
 if __name__ == '__main__':
 
-    GetIpThread2(10).start()
-    time.sleep(2)
+    # GetIpThread2(10).start()
+    # time.sleep(2)
 
-    for i in range(3):
+    for i in range(thread_count):
         Wenjuanx(i + 1, str(read_urid)).start()
         time.sleep(0.2)
 

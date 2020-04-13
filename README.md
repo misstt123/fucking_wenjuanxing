@@ -18,12 +18,12 @@
 1.  `config.ini`的`count{n}`为第n个线程的ip使用数
 2.  `config.ini`的`fail{n}`为第n个线程的ip不可用数
     >可用来校验ip代理商的可用率
-
-3. `python wenjuanxin.py`运行程序即可。
+3. `python wenjuanxin_private.py`运行程序即可。
 
 #### 功能  
 - [x] ip代理
 - [x] 日志模块
-- [x] 多线程  
+- [x] 多线程
+- [x] server酱通知  
 - [ ] 多问卷id
 - [ ] ADSL切换
