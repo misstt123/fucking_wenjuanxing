@@ -19,13 +19,14 @@ from threading import Thread  # 导入线程函数
 from threading import Lock
 import threading
 import traceback
+
 # import math
 # from faker import Factory
 # from urllib import parse
 # import json
 # import jieba.analyse
 # from urllib.parse import urlencode
-ua = UserAgent(use_cache_server=False,path="fake_useragent_0.1.11.json")
+ua = UserAgent(use_cache_server=False, path="fake_useragent_0.1.11.json")
 # count_mutex=0#使用量mutex
 
 file = 'config.ini'
@@ -37,7 +38,8 @@ config_parse.read(file, encoding='utf-8')
 use_count = config_parse.getint("ip", "count")  # ip使用量
 use_fail = config_parse.getint("ip", "fail")  # ip失败数量
 read_urid = config_parse.getint("wjx", "id")  # 问卷星id号
-thread_count=config_parse.getint("wjx","thread_count")#启用线程数
+thread_count = config_parse.getint("wjx", "thread_count")  # 启用线程数
+proxy_api = config_parse.get("wjx", "proxyapi")  # ip代理api
 
 # 一系列的工具方法
 def notice_wechat(title, content):
@@ -225,9 +227,10 @@ for item in div:
 
 
 class GetIpThread2(threading.Thread):
-    def __init__(self,fetchTime):
+    def __init__(self, fetchTime):
         threading.Thread.__init__(self)
-        self.fetchTime=fetchTime
+        self.fetchTime = fetchTime
+
     def run(self):
 
         global mutex
@@ -235,7 +238,7 @@ class GetIpThread2(threading.Thread):
         while True:
             if (len(ips) <= 0):
                 mutex.acquire()
-                apiUrl ="http://kuyukuyu.com/agents/get?uuid=6aaf8268-4bf4-4b2d-91fe-4c339cca136d"
+                apiUrl = "http://kuyukuyu.com/agents/get?uuid=6aaf8268-4bf4-4b2d-91fe-4c339cca136d"
                 res = requests.get(apiUrl, timeout=45)
                 res_text = res.text.strip()
                 if ("用完" in res_text or "ip" in res_text):
@@ -268,10 +271,10 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
 
     def __init__(self, threadID, curid):
         threading.Thread.__init__(self)
-        self.ips=[]
+        self.ips = []
         self.threadID = threadID
-        self.use_fail=config_parse.getint("ip","fail"+str(self.threadID))
-        self.use_count=config_parse.getint("ip","count"+str(self.threadID))
+        self.use_fail = config_parse.getint("ip", "fail" + str(self.threadID))
+        self.use_count = config_parse.getint("ip", "count" + str(self.threadID))
         # self.logger.setLevel(logging.DEBUG)  # Log等级开关
         #
         # log_path = os.path.dirname(os.getcwd()) + '/Logs/'
@@ -331,7 +334,7 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
         elif ("订单过期" in res_text):
             notice_wechat("订单过期了", "{} 总数为：{}".format(current_time(0), use_count))
             sys.exit(0)
-        self.use_count=self.use_count+5
+        self.use_count = self.use_count + 5
         self.update_config_count(self.use_count)
         items = res_text.split('\n')
         for item in items:
@@ -340,12 +343,12 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
     def update_config_count(self, num):
         # config_parse.set('ip',"count",str(12580))
         # use_count=config_parse.getint("ip","count")
-        config_parse.set("ip", "count"+str(self.threadID), str(num))
+        config_parse.set("ip", "count" + str(self.threadID), str(num))
         with open("config.ini", "w+") as f:
             config_parse.write(f)
 
     def update_config_fail(self, num):
-        config_parse.set("ip", "fail"+str(self.threadID), str(num))
+        config_parse.set("ip", "fail" + str(self.threadID), str(num))
         with open("config.ini", "w+") as f:
             config_parse.write(f)
 
@@ -509,7 +512,7 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
         }
         while (time.sleep(0.05), True):
 
-            while(len(self.ips) <= 0):
+            while (len(self.ips) <= 0):
                 self.update_ips()
             i = random_num(0, len(self.ips) - 1)
             ip = self.ips[i]
@@ -549,13 +552,13 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
             count = 0  # 单个ip使用计数器
             while (True):
                 try:
-                    s=requests.session()
+                    s = requests.session()
                     # 重试次数为3
                     s.mount('http://', HTTPAdapter(max_retries=3))
                     s.mount('https://', HTTPAdapter(max_retries=3))
                     res = s.post(
                         url, headers=self.headers, data=data_s, params=params,
-                        proxies=proxies,timeout=16)
+                        proxies=proxies, timeout=16)
                     count = count + 1
                     message = res.text
                     status_code = message.split('〒')[0]
@@ -564,13 +567,12 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
                     print("{}:{}".format(self.threadID, message))
                 except Exception as e:
                     if (count == 0):
-                        self.use_fail=self.use_fail+1
+                        self.use_fail = self.use_fail + 1
                         self.update_config_fail(self.use_fail)
                     repr(e)
                     break
                 finally:
                     time.sleep(random.uniform(0.5, 1.3))
-
 
 
 if __name__ == '__main__':
