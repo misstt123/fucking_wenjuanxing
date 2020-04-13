@@ -306,7 +306,8 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
         apiUrl = "http://quansuip.com:7772/ProxyiPAPI.aspx?action=GetIPAPI&qty=5&ordernumber=501ed0ae6657ad744868e7b382fe1aa9"
         res = requests.get(apiUrl, timeout=7)
         res_text = res.text.strip()
-        if ("用完" in res_text or "ip" in res_text):
+        # 数量用完，温馨提示：订单:501ed0ae6657ad744868e7b382fe1aa9 , 产品数量10000 ,已经用完！非常感谢您的支持! 如需要帮助请联系:   客服与技术 QQ 17969688
+        if ("数量用完" in res_text):
             notice_wechat("ip量用完了", "{} 总数为：{}".format(current_time(0), use_count))
             sys.exit(0)
         elif ("订单过期" in res_text):
