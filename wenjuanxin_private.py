@@ -13,6 +13,9 @@ import re
 from bs4 import BeautifulSoup
 import configparser
 from requests.adapters import HTTPAdapter
+import csv
+import pandas as pd
+
 import logging
 import os.path
 from threading import Thread  # 导入线程函数
@@ -574,6 +577,27 @@ class Wenjuanx(threading.Thread):  # 继承父类threading.Thread
                 finally:
                     time.sleep(random.uniform(0.5, 1.3))
 
+f=open('ip_pool.csv','a')
+# f_csv = csv.writer(f)
+# #保存到csv文件
+# def saveJson(ss):
+#     f_csv.writerows([ss])
+
+
+def toCSV(data):
+    '''
+    将抓取到的数据转换成CSV文件
+    :param data:数据
+    :param flags:标志位 0：元组，1：字典
+    :return:
+    '''
+    try:
+        f.writelines(data)
+        f.write(",")
+    except Exception as e:
+        # notice_wechat("csv插入异常", "时间: " + current_time(0) + ", url： " + data['url'], ", 异常信息： " + str(e))
+        print(e)
+
 
 if __name__ == '__main__':
 
@@ -584,4 +608,10 @@ if __name__ == '__main__':
         Wenjuanx(i + 1, str(read_urid)).start()
         time.sleep(0.2)
 
+
+    # for i in range(20):
+    #     toCSV("183.54.3.2:{}".format(str(i)))
+
+
+    f.close()
     print()
